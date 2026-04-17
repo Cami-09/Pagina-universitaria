@@ -3,192 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uniciencia | Corporación Universitaria</title>
+    <title>Uniciencia | Corporación Universitaria de Ciencia y Desarrollo</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        :root { --azul: #003366; --rojo: #e30613; --gris: #f4f7f9; --dark: #1a1d23; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; color: #333; line-height: 1.6; background: #fff; }
+        :root {
+            --azul-uniciencia: #003366;
+            --rojo-uniciencia: #e30613;
+            --gris-claro: #f8f9fa;
+        }
 
-        /* HEADER & NAV */
-        .top-bar { background: var(--azul); color: white; padding: 8px 10%; display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; color: #333; line-height: 1.5; }
+
+        /* BARRA SUPERIOR */
+        .top-bar { background: var(--azul-uniciencia); color: white; padding: 8px 10%; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; }
+        .btn-sede { background: var(--rojo-uniciencia); color: white; border: none; padding: 5px 12px; cursor: pointer; text-transform: uppercase; border-radius: 2px; }
+
+        /* NAVBAR PRINCIPAL */
         .navbar { background: white; padding: 10px 10%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .logo h1 { color: var(--azul); font-weight: 800; font-size: 28px; cursor: pointer; }
-        .logo span { color: var(--rojo); }
+        .logo h1 { color: var(--azul-uniciencia); font-weight: 800; font-size: 26px; cursor: pointer; }
+        .logo span { color: var(--rojo-uniciencia); }
 
         .nav-list { display: flex; list-style: none; }
         .nav-item { position: relative; }
-        .nav-link { text-decoration: none; color: var(--azul); font-weight: 700; font-size: 13px; padding: 15px; text-transform: uppercase; display: block; }
-        .nav-link:hover { color: var(--rojo); }
+        .nav-link { text-decoration: none; color: var(--azul-uniciencia); font-weight: 700; font-size: 13px; padding: 20px 12px; text-transform: uppercase; display: block; border-bottom: 3px solid transparent; }
+        .nav-link:hover, .active-link { color: var(--rojo-uniciencia); border-bottom: 3px solid var(--azul-uniciencia); }
 
-        /* DROPDOWNS */
-        .dropdown { position: absolute; top: 100%; left: 0; background: white; min-width: 250px; display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-top: 3px solid var(--rojo); z-index: 100; }
-        .dropdown a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
-        .dropdown a:hover { background: var(--gris); color: var(--rojo); }
+        /* MENÚS DESPLEGABLES (DROPDOWNS) */
+        .dropdown { position: absolute; top: 100%; left: 0; background: white; min-width: 250px; display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-top: 4px solid var(--rojo-uniciencia); }
+        .dropdown a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 13px; font-weight: 500; border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
+        .dropdown a:hover { background: var(--gris-claro); color: var(--rojo-uniciencia); padding-left: 25px; }
         .nav-item:hover .dropdown { display: block; }
 
-        /* SECCIONES */
-        .page-section { display: none; animation: fadeIn 0.5s; }
-        .active-section { display: block; }
+        /* CONTENEDOR DE PÁGINAS (SPA) */
+        .page-content { display: none; animation: fadeIn 0.4s ease-in; min-height: 70vh; }
+        .active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* BANNER */
+        /* BANNER DINÁMICO */
         .swiper { width: 100%; height: 500px; }
         .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: center; color: white; padding-left: 10%; position: relative; }
         .swiper-slide::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
-        .slide-content { position: relative; z-index: 10; max-width: 600px; }
-        .slide-content h2 { font-size: 42px; margin-bottom: 15px; }
+        .slide-info { position: relative; z-index: 10; max-width: 650px; }
+        .slide-info h2 { font-size: 45px; font-weight: 800; line-height: 1.1; margin-bottom: 15px; }
+        .swiper-button-next, .swiper-button-prev { color: white !important; }
 
-        /* GRID DE NOTICIAS Y TARJETAS */
+        /* SECCIONES INICIO: TARJETAS Y NOTICIAS */
         .container { padding: 60px 10%; }
-        .section-header { border-left: 5px solid var(--rojo); padding-left: 20px; margin-bottom: 40px; }
+        .section-header { border-left: 6px solid var(--rojo-uniciencia); padding-left: 20px; margin-bottom: 40px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         
-        .card { background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
-        .card-body { padding: 20px; }
-        .badge-cerrada { position: absolute; top: 20px; right: 20px; background: var(--rojo); color: white; padding: 5px 15px; font-weight: bold; border-radius: 4px; transform: rotate(5deg); box-shadow: 2px 2px 10px rgba(0,0,0,0.2); }
+        /* CARTAS DIRECTORIO (Diseño Circular como Captura) */
+        .staff-card { background: white; border: 1px solid #eee; border-radius: 10px; padding: 30px; text-align: left; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
+        .staff-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .staff-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #00a0df; flex-shrink: 0; }
+        .staff-text h4 { color: #00a0df; text-transform: uppercase; font-size: 16px; margin-bottom: 5px; }
+        .staff-text p { font-size: 13px; color: #666; font-weight: 600; }
+        .staff-text span { font-size: 12px; color: #00a0df; word-break: break-all; }
 
-        /* FOOTER */
-        footer { background: var(--dark); color: #ccc; padding: 60px 10% 20px; }
+        /* FOOTER OSCURO */
+        footer { background: #1a1d23; color: #999; padding: 60px 10% 20px; font-size: 13px; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
-        .footer-col h4 { color: white; margin-bottom: 20px; border-bottom: 2px solid var(--rojo); display: inline-block; }
+        .footer-col h4 { color: white; margin-bottom: 25px; text-transform: uppercase; border-bottom: 2px solid var(--rojo-uniciencia); display: inline-block; padding-bottom: 5px; }
+        .footer-bottom { border-top: 1px solid #333; margin-top: 40px; padding-top: 25px; text-align: center; }
+
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        <span>ESCOGE TU SEDE ▼</span>
-        <div>U-VIRTUAL | SIGA | PQRSD | CORREO</div>
+        <button class="btn-sede">ESCOGE TU SEDE <i class="fas fa-caret-down"></i></button>
+        <div>U-VIRTUAL | SIGA | PQRSD | CORREO INSTITUCIONAL | PSE</div>
     </div>
 
     <header class="navbar">
-        <div class="logo" onclick="showPage('inicio')"><h1>UNI<span>CIENCIA</span></h1></div>
+        <div class="logo" onclick="navigateTo('inicio')"><h1>UNI<span>CIENCIA</span></h1></div>
         <nav>
             <ul class="nav-list">
-                <li class="nav-item"><a href="#" class="nav-link" onclick="showPage('inicio')">Inicio</a></li>
+                <li class="nav-item"><a href="#" class="nav-link active-link" onclick="navigateTo('inicio')">Inicio</a></li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Nosotros <i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="nav-link">Nosotros <i class="fas fa-chevron-down" style="font-size: 10px;"></i></a>
                     <div class="dropdown">
-                        <a href="#" onclick="showPage('directorio')">Directorio Administrativo</a>
-                        <a href="#" onclick="showPage('mision')">Misión y Visión</a>
+                        <a href="#" onclick="navigateTo('directorio')">Directorio Administrativo</a>
+                        <a href="#" onclick="navigateTo('mision')">Misión y Visión</a>
                         <a href="#">Reseña Histórica</a>
+                        <a href="#">Estructura Organizacional</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Programas <i class="fas fa-chevron-down"></i></a>
                     <div class="dropdown">
-                        <a href="#" onclick="showPage('programas')">Pregrado</a>
+                        <a href="#" onclick="navigateTo('programas')">Pregrado</a>
                         <a href="#">Especializaciones</a>
+                        <a href="#">Educación Continuada</a>
                     </div>
                 </li>
+                <li class="nav-item"><a href="#" class="nav-link">Investigación</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Normatividad</a></li>
                 <li class="nav-item"><a href="#" class="nav-link">Vive la U</a></li>
             </ul>
         </nav>
     </header>
 
-    <main id="inicio" class="page-section active-section">
+    <main id="inicio" class="page-content active-page">
         <div class="swiper">
-            <div class="swiper-wrapper" id="banner-content"></div>
+            <div class="swiper-wrapper" id="banner-slides">
+                </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-pagination"></div>
         </div>
 
-        <div class="container">
-            <div class="section-header"><h2>Uninoticias</h2></div>
-            <div class="grid" id="noticias-content"></div>
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 32px; color: var(--azul-uniciencia);">BIENVENIDO A UNICIENCIA</h2>
+            <p style="max-width: 800px; margin: 20px auto; color: #666;">Formamos profesionales integrales con sentido ético y responsabilidad social.</p>
         </div>
 
-        <div class="container" style="background: var(--gris);">
-            <div class="section-header"><h2>Convocatorias</h2></div>
-            <div class="grid" id="convocatorias-content"></div>
+        <div class="container grid">
+            <div style="background: var(--rojo-uniciencia); color:white; padding: 40px; text-align: center; border-radius: 8px;">
+                <i class="fas fa-edit fa-3x"></i>
+                <h3 style="margin: 15px 0;">INSCRIPCIÓN</h3>
+                <p>Sé parte de nuestra comunidad. Uniciencia te acerca a tus metas.</p>
+                <a href="#" style="color:white; font-weight: 700; text-decoration:none; display:block; margin-top:20px;">FORMULARIO DE INSCRIPCIÓN ></a>
+            </div>
+            <div style="background: var(--azul-uniciencia); color:white; padding: 40px; text-align: center; border-radius: 8px;">
+                <i class="fas fa-user-graduate fa-3x"></i>
+                <h3 style="margin: 15px 0;">ESTUDIANTE</h3>
+                <p>Tutoriales, procesos de reintegro, grado y entidades financieras.</p>
+                <a href="#" style="color:white; font-weight: 700; text-decoration:none; display:block; margin-top:20px;">IR A LA SECCIÓN ></a>
+            </div>
+            <div style="background: var(--rojo-uniciencia); color:white; padding: 40px; text-align: center; border-radius: 8px;">
+                <i class="fas fa-search fa-3x"></i>
+                <h3 style="margin: 15px 0;">CONVOCATORIAS</h3>
+                <p>¿Quieres hacer parte de nuestro equipo? Mira nuestras ofertas.</p>
+                <a href="#" style="color:white; font-weight: 700; text-decoration:none; display:block; margin-top:20px;">VER OFERTAS ></a>
+            </div>
         </div>
     </main>
 
-    <section id="directorio" class="page-section container">
-        <div class="section-header"><h2>Directorio Administrativo</h2></div>
-        <div class="grid" id="staff-content"></div>
-    </section>
-
-    <section id="mision" class="page-section container">
-        <div class="section-header"><h2>Misión y Visión</h2></div>
-        <div style="display:flex; gap:30px;">
-            <div style="flex:1; padding:30px; background:var(--gris);">
-                <h3 style="color:var(--rojo)">MISIÓN</h3>
-                <p>Formación integral de profesionales con ética...</p>
-            </div>
-            <div style="flex:1; padding:30px; background:var(--azul); color:white;">
-                <h3 style="color:white">VISIÓN</h3>
-                <p>Ser reconocidos como líderes en tecnología para 2030...</p>
-            </div>
+    <section id="directorio" class="page-content container">
+        <div class="section-header">
+            <h2 style="color: var(--azul-uniciencia); font-size: 30px;">DIRECTORIO ADMINISTRATIVO</h2>
+            <p>Conoce nuestro equipo directivo e institucional.</p>
         </div>
+        
+        <h3 style="margin: 40px 0 20px; color: #666; border-bottom: 1px solid #ddd; padding-bottom: 10px;">DIRECCIÓN INSTITUCIONAL</h3>
+        <div class="grid" id="staff-institutional">
+            </div>
+
+        <h3 style="margin: 60px 0 20px; color: #666; border-bottom: 1px solid #ddd; padding-bottom: 10px;">PLANEACIÓN INSTITUCIONAL</h3>
+        <div class="grid" id="staff-planning">
+            </div>
     </section>
 
-    <section id="programas" class="page-section container">
-        <div class="section-header"><h2>Nuestros Programas</h2></div>
+    <section id="programas" class="page-content container">
+        <div class="section-header"><h2>Nuestros Programas de Pregrado</h2></div>
         <div class="grid">
-            <div class="card"><div class="card-body"><h3>Derecho</h3><p>Bucaramanga - Presencial</p></div></div>
-            <div class="card"><div class="card-body"><h3>Contaduría Pública</h3><p>Bucaramanga - Presencial</p></div></div>
-            <div class="card"><div class="card-body"><h3>Ingeniería de Sistemas</h3><p>Bucaramanga - Presencial</p></div></div>
+            <div class="staff-card"><div class="staff-text"><h4>Derecho</h4><p>Modalidad: Presencial</p><span>Bucaramanga - Bogotá - Tunja</span></div></div>
+            <div class="staff-card"><div class="staff-text"><h4>Psicología</h4><p>Modalidad: Presencial</p><span>Bucaramanga</span></div></div>
+            <div class="staff-card"><div class="staff-text"><h4>Contaduría Pública</h4><p>Modalidad: Presencial</p><span>Nacional</span></div></div>
         </div>
     </section>
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col"><h4>Bucaramanga</h4><p>Carrera 12 # 37-14</p><p>Tel: 6306060</p></div>
-            <div class="footer-col"><h4>Bogotá</h4><p>Carrera 13 # 75-74</p></div>
-            <div class="footer-col"><h4>Enlaces</h4><p>Transparencia</p><p>Saber Pro</p></div>
+            <div class="footer-col">
+                <h4>Sede Bucaramanga</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Carrera 12 # 37-14</p>
+                <p><i class="fas fa-phone"></i> (607) 6306060</p>
+            </div>
+            <div class="footer-col">
+                <h4>Sede Bogotá</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Carrera 13 # 75-74</p>
+                <p><i class="fas fa-phone"></i> (601) 3930444</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navega</h4>
+                <p>Transparencia</p>
+                <p>Saber Pro</p>
+                <p>Tratamiento de Datos</p>
+            </div>
         </div>
-        <div style="text-align:center; margin-top:40px; font-size:12px;">© 2026 UNICIENCIA - Todos los derechos reservados.</div>
+        <div class="footer-bottom">
+            &copy; 2026 Corporación Universitaria de Ciencia y Desarrollo - UNICIENCIA. Institución de Educación Superior sujeta a inspección y vigilancia por el Ministerio de Educación Nacional.
+        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // DATOS EDITABLES
-        const banners = [
-            { img: 'https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98', h: 'Admisiones 2026', p: 'Inicia tu carrera profesional con nosotros.' },
-            { img: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd', h: 'Foro Gerencial', p: 'Transformación digital y liderazgo.' }
+        // 1. Datos del Banner
+        const slides = [
+            { img: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd', h: 'Foro Académico: Gerencia Estratégica', p: '18 de abril - 2026 | Modalidad Sincrónica' },
+            { img: 'https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98', h: 'Admisiones Abiertas 2026', p: 'Inicia tu futuro profesional con nosotros.' }
         ];
 
-        const noticias = [
-            { t: 'TEDx Uniciencia', d: 'Evento de innovación y charlas inspiradoras.', img: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678' },
-            { t: 'Convenio Internacional', d: 'Nuevas alianzas con universidades de Europa.', img: 'https://images.unsplash.com/photo-1523050335392-93851179ae22' }
+        // 2. Datos del Directorio (Según tus capturas)
+        const institutionalStaff = [
+            { n: 'Lilian Johanna Fernandez', c: 'Representante Legal Conjunta', e: 'representacionlegalconjunta@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=32' },
+            { n: 'Gonzalo Hernando Téllez', c: 'Representante Legal Conjunta', e: 'representacionlegalconjunta@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=12' },
+            { n: 'María Alejandra Rodríguez', c: 'Rectora', e: 'rectoria@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=44' }
         ];
 
-        const convocatorias = [
-            { t: 'Docente de Derecho', estado: 'abierta', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f' },
-            { t: 'Secretaría Académica', estado: 'cerrada', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab' }
+        const planningStaff = [
+            { n: 'Jairo Humberto Lara Zárate', c: 'Coordinador Planeación Nacional', e: 'dir.planeacion@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=53' }
         ];
 
-        const staff = [
-            { n: 'Dr. Roberto Gómez', c: 'Rectoría', f: 'https://images.unsplash.com/photo-1560250097-0b93528c311a' },
-            { n: 'Dra. María Martínez', c: 'Gestión Humana', f: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2' }
-        ];
-
-        // FUNCIONES DE CARGA
-        function render() {
-            banners.forEach(b => document.getElementById('banner-content').innerHTML += `<div class="swiper-slide" style="background-image:url('${b.img}')"><div class="slide-content"><h2>${b.h}</h2><p>${b.p}</p></div></div>`);
-            noticias.forEach(n => document.getElementById('noticias-content').innerHTML += `<div class="card"><img src="${n.img}" class="card-img"><div class="card-body"><h4>${n.t}</h4><p>${n.d}</p></div></div>`);
-            convocatorias.forEach(c => document.getElementById('convocatorias-content').innerHTML += `<div class="card">${c.estado === 'cerrada' ? '<div class="badge-cerrada">CERRADA</div>' : ''}<img src="${c.img}" class="card-img" style="${c.estado === 'cerrada' ? 'filter:grayscale(1)' : ''}"><div class="card-body"><h4>${c.t}</h4></div></div>`);
-            staff.forEach(s => document.getElementById('staff-content').innerHTML += `<div class="card"><img src="${s.f}" class="card-img"><div class="card-body"><h4>${s.n}</h4><p style="color:var(--rojo)">${s.c}</p></div></div>`);
-
-            new Swiper('.swiper', { loop: true, autoplay: { delay: 4000 }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true } });
+        // 3. Función para Navegar (Sin recargar la página)
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
+            
+            document.getElementById(pageId).classList.add('active-page');
+            event.currentTarget.classList?.add('active-link');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(pageId === 'inicio') setTimeout(() => window.swiper.update(), 200);
         }
 
-        // NAVEGACIÓN SPA
-        function showPage(id) {
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
-            document.getElementById(id).classList.add('active-section');
-            window.scrollTo(0,0);
+        // 4. Inicialización
+        function init() {
+            // Render Banner
+            const slider = document.getElementById('banner-slides');
+            slides.forEach(s => slider.innerHTML += `<div class="swiper-slide" style="background-image:url('${s.img}')"><div class="slide-info"><h2>${s.h}</h2><p>${s.p}</p></div></div>`);
+
+            // Render Directorio
+            const instGrid = document.getElementById('staff-institutional');
+            institutionalStaff.forEach(p => instGrid.innerHTML += `
+                <div class="staff-card">
+                    <img src="${p.f}" class="staff-img">
+                    <div class="staff-text">
+                        <h4>${p.n}</h4>
+                        <p>${p.c}</p>
+                        <span>${p.e}</span>
+                    </div>
+                </div>`);
+
+            const planGrid = document.getElementById('staff-planning');
+            planningStaff.forEach(p => planGrid.innerHTML += `
+                <div class="staff-card">
+                    <img src="${p.f}" class="staff-img">
+                    <div class="staff-text">
+                        <h4>${p.n}</h4>
+                        <p>${p.c}</p>
+                        <span>${p.e}</span>
+                    </div>
+                </div>`);
+
+            // Activar Swiper
+            window.swiper = new Swiper('.swiper', {
+                loop: true,
+                autoplay: { delay: 4000 },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                pagination: { el: '.swiper-pagination', clickable: true },
+            });
         }
 
-        window.onload = render;
+        window.onload = init;
     </script>
 </body>
 </html>
