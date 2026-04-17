@@ -5,19 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UNIVERSIDAD PRO SYSTEM</title>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <style>
-body{margin:0;font-family:Segoe UI;background:#eef1f5}
+body{margin:0;font-family:Arial;background:#eef2f7}
 
 /* HEADER */
 header{
 background:#002147;
-color:#fff;
+color:white;
 padding:15px;
 display:flex;
 justify-content:space-between;
@@ -39,12 +38,13 @@ display:none;
 /* MAIN */
 .main{flex:1;padding:20px}
 
-/* CARDS */
+/* CARD */
 .card{
 background:white;
 padding:15px;
 margin:10px 0;
 border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* INPUT */
@@ -65,7 +65,7 @@ cursor:pointer;
 /* BANNER */
 .banner img{
 width:100%;
-height:350px;
+height:320px;
 object-fit:cover;
 border-radius:10px;
 }
@@ -88,7 +88,7 @@ border-radius:10px;
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<h3>ADMIN</h3>
+<h3>ADMIN PANEL</h3>
 <button onclick="view('users')">Usuarios</button>
 <button onclick="view('programs')">Programas</button>
 <button onclick="view('banner')">Banner</button>
@@ -103,16 +103,17 @@ border-radius:10px;
 <div class="banner" id="banner"></div>
 
 <h3>Programas</h3>
-<div id="programsPublic"></div>
+<div id="programListPublic"></div>
 
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="hidden">
 
-<h2>Login</h2>
+<h2>Login / Registro</h2>
+
 <input id="email" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
+<input id="password" type="password" placeholder="Password">
 
 <button onclick="register()">Registro</button>
 <button onclick="login()">Entrar</button>
@@ -122,20 +123,23 @@ border-radius:10px;
 <!-- ADMIN -->
 <div id="admin" class="hidden">
 
+<!-- USERS -->
 <div id="usersView" class="hidden">
 <h2>Usuarios</h2>
 <div id="usersList"></div>
 </div>
 
+<!-- PROGRAMS -->
 <div id="programsView" class="hidden">
 <h2>Programas</h2>
-<input id="programName">
+<input id="programName" placeholder="Nuevo programa">
 <button onclick="addProgram()">Agregar</button>
-<div id="programList"></div>
+<div id="programListAdmin"></div>
 </div>
 
+<!-- BANNER -->
 <div id="bannerView" class="hidden">
-<h2>Banner</h2>
+<h2>Subir Banner</h2>
 <input type="file" onchange="uploadBanner(this.files[0])">
 </div>
 
@@ -151,7 +155,7 @@ const firebaseConfig = {
   apiKey: "TU_API_KEY",
   authDomain: "TU_AUTH_DOMAIN",
   projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_BUCKET"
+  storageBucket: "TU_STORAGE_BUCKET"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -160,7 +164,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-/* ================= DOM ================= */
+/* ================= ELEMENTOS ================= */
 const sidebar = document.getElementById("sidebar");
 const home = document.getElementById("home");
 const loginDiv = document.getElementById("login");
@@ -174,33 +178,65 @@ loginDiv.classList.remove("hidden");
 
 /* ================= AUTH ================= */
 function register(){
-auth.createUserWithEmailAndPassword(email.value,pass.value)
-.then(u=>{
-db.collection("users").doc(u.user.uid).set({
+auth.createUserWithEmailAndPassword(email.value,password.value)
+.then(async u=>{
+await db.collection("users").doc(u.user.uid).set({
 email: email.value,
 role: "student"
 });
+alert("Usuario creado");
 });
 }
 
 function login(){
-auth.signInWithEmailAndPassword(email.value,pass.value)
+auth.signInWithEmailAndPassword(email.value,password.value)
 .then(u=>{
 checkRole(u.user.uid);
 });
 }
 
-/* ================= ROLE ================= */
+/* ================= ROLE SYSTEM ================= */
 async function checkRole(uid){
+
 let doc = await db.collection("users").doc(uid).get();
 
-if(doc.data().role === "admin"){
+if(doc.exists && doc.data().role === "admin"){
 sidebar.style.display="block";
 admin.classList.remove("hidden");
 home.classList.add("hidden");
+loadUsers();
+loadPrograms();
+loadBanner();
 } else {
 alert("Bienvenido estudiante");
 }
+}
+
+/* ================= USERS ================= */
+function loadUsers(){
+db.collection("users").onSnapshot(snap=>{
+let html="";
+snap.forEach(doc=>{
+html += `
+<div class="card">
+${doc.data().email}
+<select onchange="changeRole('${doc.id}',this.value)">
+<option value="student">student</option>
+<option value="admin">admin</option>
+</select>
+<button onclick="deleteUser('${doc.id}')">Eliminar</button>
+</div>`;
+});
+usersList.innerHTML = html;
+});
+}
+
+function changeRole(id,role){
+db.collection("users").doc(id).update({role});
+}
+
+function deleteUser(id){
+db.collection("users").doc(id).delete();
 }
 
 /* ================= PROGRAMS ================= */
@@ -216,36 +252,9 @@ let html="";
 snap.forEach(doc=>{
 html += `<div class="card">${doc.data().name}</div>`;
 });
-programList.innerHTML = html;
-programsPublic.innerHTML = html;
+programListAdmin.innerHTML = html;
+programListPublic.innerHTML = html;
 });
-}
-
-/* ================= USERS (ADMIN) ================= */
-function loadUsers(){
-db.collection("users").onSnapshot(snap=>{
-let html="";
-snap.forEach(doc=>{
-html += `
-<div class="card">
-${doc.data().email}
-<select onchange="updateRole('${doc.id}',this.value)">
-<option value="student">student</option>
-<option value="admin">admin</option>
-</select>
-<button onclick="deleteUser('${doc.id}')">Eliminar</button>
-</div>`;
-});
-usersList.innerHTML = html;
-});
-}
-
-function updateRole(id,role){
-db.collection("users").doc(id).update({role});
-}
-
-function deleteUser(id){
-db.collection("users").doc(id).delete();
 }
 
 /* ================= BANNER ================= */
@@ -264,7 +273,7 @@ db.collection("banner").add({url});
 
 function loadBanner(){
 db.collection("banner").onSnapshot(snap=>{
-images = [];
+images=[];
 snap.forEach(doc=>{
 images.push(doc.data().url);
 });
@@ -273,12 +282,12 @@ images.push(doc.data().url);
 
 setInterval(()=>{
 if(images.length>0){
-index = (index+1)%images.length;
-banner.innerHTML = `<img src="${images[index]}">`;
+index=(index+1)%images.length;
+banner.innerHTML=`<img src="${images[index]}">`;
 }
 },3000);
 
-/* ================= ADMIN NAV ================= */
+/* ================= VIEW ================= */
 function view(section){
 usersView.classList.add("hidden");
 programsView.classList.add("hidden");
@@ -288,11 +297,6 @@ if(section==="users") usersView.classList.remove("hidden");
 if(section==="programs") programsView.classList.remove("hidden");
 if(section==="banner") bannerView.classList.remove("hidden");
 }
-
-/* ================= INIT ================= */
-loadPrograms();
-loadUsers();
-loadBanner();
 
 </script>
 
