@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réplica Uniciencia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        
+        /* Barra Superior Azul */
+        .top-bar {
+            background-color: #003366;
+            color: white;
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Logo y Navegación */
+        .header-main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #e1e1e1;
+        }
+        .logo img { height: 50px; }
+        nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; }
+
+        /* Estilos del Banner (Carrusel) */
+        .swiper { width: 100%; height: 450px; }
+        .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+        }
+        .banner-content {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            max-width: 500px;
+            border-left: 5px solid #d32f2f;
+        }
+
+        /* Botones de navegación */
+        .swiper-button-next, .swiper-button-prev { color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button style="background: red; color: white; border: none; padding: 5px 10px;">ESCOGE TU SEDE</button>
+        <div>U-VIRTUAL | SIGA | PQRSD | PSE</div>
+    </div>
+
+    <header class="header-main">
+        <div class="logo"><strong>UNICiencia</strong></div>
+        <nav>
+            <a href="#">INICIO</a>
+            <a href="#">NOSOTROS</a>
+            <a href="#">PROGRAMAS</a>
+            <a href="#">INVESTIGACIÓN</a>
+        </nav>
+    </header>
+
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" style="background-image: url('https://via.placeholder.com/1200x450/f0f0f0?text=Banner+1')">
+                <div class="banner-content">
+                    <h2>Gerencia Estratégica</h2>
+                    <p>18 de abril - 2026 | 8:15 a.m.</p>
+                </div>
+            </div>
+            <div class="swiper-slide" style="background-image: url('https://via.placeholder.com/1200x450/e0e0e0?text=Banner+2')">
+                <div class="banner-content">
+                    <h2>Inscripciones Abiertas</h2>
+                    <p>Calendario Académico 2026-I</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+                delay: 4000, // Se mueve solo cada 4 segundos
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    </script>
+</body>
+</html>
