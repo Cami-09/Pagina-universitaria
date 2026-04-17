@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UNICIENCIA SYSTEM PRO</title>
+<title>UNIVERSIDAD PRO SYSTEM</title>
 
-<!-- Firebase v8 (CORRECTO PARA TU CÓDIGO) -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <style>
 body{margin:0;font-family:Segoe UI;background:#eef1f5}
@@ -17,16 +18,9 @@ body{margin:0;font-family:Segoe UI;background:#eef1f5}
 header{
 background:#002147;
 color:#fff;
-padding:15px 30px;
+padding:15px;
 display:flex;
 justify-content:space-between;
-align-items:center;
-}
-
-nav a{
-color:white;
-margin:10px;
-cursor:pointer;
 }
 
 /* LAYOUT */
@@ -42,16 +36,8 @@ padding:20px;
 display:none;
 }
 
-.sidebar div{
-margin:15px 0;
-cursor:pointer;
-}
-
 /* MAIN */
-.main{
-flex:1;
-padding:30px;
-}
+.main{flex:1;padding:20px}
 
 /* CARDS */
 .card{
@@ -59,13 +45,12 @@ background:white;
 padding:15px;
 margin:10px 0;
 border-radius:10px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* INPUT */
-input{
-padding:10px;
+input,select{
 width:100%;
+padding:10px;
 margin:5px 0;
 }
 
@@ -77,14 +62,12 @@ border:none;
 cursor:pointer;
 }
 
-/* HERO */
-.hero{
-background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1');
-background-size:cover;
-color:white;
-padding:100px;
-text-align:center;
+/* BANNER */
+.banner img{
+width:100%;
+height:350px;
+object-fit:cover;
+border-radius:10px;
 }
 
 /* HIDDEN */
@@ -95,20 +78,20 @@ text-align:center;
 <body>
 
 <header>
-<h2>UNICIENCIA</h2>
-<nav>
-<a onclick="showHome()">Inicio</a>
-<a onclick="showLogin()">Login</a>
-</nav>
+<h2>UNIVERSIDAD PRO</h2>
+<div>
+<button onclick="showLogin()">Login</button>
+</div>
 </header>
 
 <div class="container">
 
-<!-- SIDEBAR ADMIN -->
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<h3>Panel Admin</h3>
-<div onclick="showAdmin('programas')">Programas</div>
-<div onclick="showAdmin('usuarios')">Usuarios</div>
+<h3>ADMIN</h3>
+<button onclick="view('users')">Usuarios</button>
+<button onclick="view('programs')">Programas</button>
+<button onclick="view('banner')">Banner</button>
 </div>
 
 <!-- MAIN -->
@@ -116,44 +99,44 @@ text-align:center;
 
 <!-- HOME -->
 <div id="home">
-<div class="hero">
-<h1>Plataforma Educativa</h1>
-<p>Sistema universitario digital</p>
-</div>
+
+<div class="banner" id="banner"></div>
 
 <h3>Programas</h3>
-<div id="programasPublic"></div>
+<div id="programsPublic"></div>
+
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="hidden">
-<h2>Login / Registro</h2>
 
+<h2>Login</h2>
 <input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Contraseña">
+<input id="pass" type="password" placeholder="Password">
 
-<button onclick="register()">Registrarse</button>
+<button onclick="register()">Registro</button>
 <button onclick="login()">Entrar</button>
 
-<p id="msg"></p>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="hidden">
 
-<!-- PROGRAMAS -->
-<div id="adminProgramas">
-<h2>Gestión de Programas</h2>
-<input id="prog" placeholder="Nombre programa">
-<button onclick="addPrograma()">Agregar</button>
-
-<div id="listaAdmin"></div>
+<div id="usersView" class="hidden">
+<h2>Usuarios</h2>
+<div id="usersList"></div>
 </div>
 
-<!-- USUARIOS -->
-<div id="adminUsuarios" class="hidden">
-<h2>Usuarios</h2>
-<div id="listaUsers"></div>
+<div id="programsView" class="hidden">
+<h2>Programas</h2>
+<input id="programName">
+<button onclick="addProgram()">Agregar</button>
+<div id="programList"></div>
+</div>
+
+<div id="bannerView" class="hidden">
+<h2>Banner</h2>
+<input type="file" onchange="uploadBanner(this.files[0])">
 </div>
 
 </div>
@@ -163,167 +146,153 @@ text-align:center;
 
 <script>
 
-/* =========================
-   FIREBASE CONFIG (TU CONFIG)
-========================= */
+/* ================= FIREBASE CONFIG ================= */
 const firebaseConfig = {
-  apiKey: "AIzaSyBFMzuABuWWLc_4UCYmZNIs0SpqlaLmggc",
-  authDomain: "pagina-web-universitaria.firebaseapp.com",
-  databaseURL: "https://pagina-web-universitaria-default-rtdb.firebaseio.com",
-  projectId: "pagina-web-universitaria",
-  storageBucket: "pagina-web-universitaria.firebasestorage.app",
-  messagingSenderId: "295859033709",
-  appId: "1:295859033709:web:7cdb2f9f2e7e0801e65164",
-  measurementId: "G-T3SL6356LE"
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_AUTH_DOMAIN",
+  projectId: "TU_PROJECT_ID",
+  storageBucket: "TU_BUCKET"
 };
 
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 
-/* =========================
-   ELEMENTOS DOM
-========================= */
+/* ================= DOM ================= */
+const sidebar = document.getElementById("sidebar");
 const home = document.getElementById("home");
 const loginDiv = document.getElementById("login");
 const admin = document.getElementById("admin");
-const sidebar = document.getElementById("sidebar");
 
-const listaAdmin = document.getElementById("listaAdmin");
-const listaUsers = document.getElementById("listaUsers");
-const programasPublic = document.getElementById("programasPublic");
-
-/* =========================
-   NAV
-========================= */
-function showHome(){
-hideAll();
-home.classList.remove("hidden");
-}
-
+/* ================= NAV ================= */
 function showLogin(){
-hideAll();
+home.classList.add("hidden");
 loginDiv.classList.remove("hidden");
 }
 
-function hideAll(){
-home.classList.add("hidden");
-loginDiv.classList.add("hidden");
-admin.classList.add("hidden");
-}
-
-/* =========================
-   AUTH
-========================= */
+/* ================= AUTH ================= */
 function register(){
-auth.createUserWithEmailAndPassword(email.value,password.value)
-.then(()=>{
-db.collection("users").add({
+auth.createUserWithEmailAndPassword(email.value,pass.value)
+.then(u=>{
+db.collection("users").doc(u.user.uid).set({
 email: email.value,
-role: "estudiante"
+role: "student"
 });
-alert("Usuario creado");
-})
-.catch(e=>alert(e.message));
+});
 }
 
 function login(){
-auth.signInWithEmailAndPassword(email.value,password.value)
-.then(user=>{
-checkRole(user.user.email);
-})
-.catch(e=>alert(e.message));
-}
-
-/* =========================
-   ROLE SYSTEM
-========================= */
-async function checkRole(emailUser){
-
-let q = await db.collection("users")
-.where("email","==",emailUser)
-.get();
-
-let isAdmin = false;
-
-q.forEach(doc=>{
-if(doc.data().role === "admin"){
-isAdmin = true;
-}
+auth.signInWithEmailAndPassword(email.value,pass.value)
+.then(u=>{
+checkRole(u.user.uid);
 });
+}
 
-if(isAdmin){
+/* ================= ROLE ================= */
+async function checkRole(uid){
+let doc = await db.collection("users").doc(uid).get();
+
+if(doc.data().role === "admin"){
 sidebar.style.display="block";
 admin.classList.remove("hidden");
 home.classList.add("hidden");
 } else {
-alert("Login exitoso como estudiante");
-showHome();
-}
-
-}
-
-/* =========================
-   ADMIN NAV
-========================= */
-function showAdmin(section){
-document.getElementById("adminProgramas").style.display="none";
-document.getElementById("adminUsuarios").style.display="none";
-
-if(section==="programas"){
-document.getElementById("adminProgramas").style.display="block";
-}
-if(section==="usuarios"){
-document.getElementById("adminUsuarios").style.display="block";
+alert("Bienvenido estudiante");
 }
 }
 
-/* =========================
-   PROGRAMAS CRUD
-========================= */
-function addPrograma(){
-db.collection("programas").add({
-nombre: prog.value
+/* ================= PROGRAMS ================= */
+function addProgram(){
+db.collection("programs").add({
+name: programName.value
 });
-prog.value="";
 }
 
-function loadProgramas(){
-db.collection("programas").onSnapshot(snap=>{
+function loadPrograms(){
+db.collection("programs").onSnapshot(snap=>{
 let html="";
 snap.forEach(doc=>{
-html += `
-<div class="card">
-${doc.data().nombre}
-<button onclick="del('${doc.id}')">Eliminar</button>
-</div>`;
+html += `<div class="card">${doc.data().name}</div>`;
 });
-
-listaAdmin.innerHTML = html;
-programasPublic.innerHTML = html;
+programList.innerHTML = html;
+programsPublic.innerHTML = html;
 });
 }
 
-function del(id){
-db.collection("programas").doc(id).delete();
-}
-
-/* =========================
-   USUARIOS
-========================= */
+/* ================= USERS (ADMIN) ================= */
 function loadUsers(){
 db.collection("users").onSnapshot(snap=>{
 let html="";
 snap.forEach(doc=>{
-html += `<div class="card">${doc.data().email} - ${doc.data().role}</div>`;
+html += `
+<div class="card">
+${doc.data().email}
+<select onchange="updateRole('${doc.id}',this.value)">
+<option value="student">student</option>
+<option value="admin">admin</option>
+</select>
+<button onclick="deleteUser('${doc.id}')">Eliminar</button>
+</div>`;
 });
-listaUsers.innerHTML = html;
+usersList.innerHTML = html;
 });
 }
 
-/* INIT */
-loadProgramas();
+function updateRole(id,role){
+db.collection("users").doc(id).update({role});
+}
+
+function deleteUser(id){
+db.collection("users").doc(id).delete();
+}
+
+/* ================= BANNER ================= */
+let images = [];
+let index = 0;
+
+function uploadBanner(file){
+let ref = storage.ref("banner/"+file.name);
+
+ref.put(file).then(()=>{
+ref.getDownloadURL().then(url=>{
+db.collection("banner").add({url});
+});
+});
+}
+
+function loadBanner(){
+db.collection("banner").onSnapshot(snap=>{
+images = [];
+snap.forEach(doc=>{
+images.push(doc.data().url);
+});
+});
+}
+
+setInterval(()=>{
+if(images.length>0){
+index = (index+1)%images.length;
+banner.innerHTML = `<img src="${images[index]}">`;
+}
+},3000);
+
+/* ================= ADMIN NAV ================= */
+function view(section){
+usersView.classList.add("hidden");
+programsView.classList.add("hidden");
+bannerView.classList.add("hidden");
+
+if(section==="users") usersView.classList.remove("hidden");
+if(section==="programs") programsView.classList.remove("hidden");
+if(section==="banner") bannerView.classList.remove("hidden");
+}
+
+/* ================= INIT ================= */
+loadPrograms();
 loadUsers();
+loadBanner();
 
 </script>
 
