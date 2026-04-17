@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UNIVERSIDAD PRO SYSTEM</title>
 
+<!-- Firebase v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -13,49 +14,90 @@
 <style>
 body{margin:0;font-family:Segoe UI;background:#f4f6f9}
 
+/* TOPBAR */
 .topbar{
-background:#002147;color:white;padding:15px;
-display:flex;justify-content:space-between
+background:#002147;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
 }
 
+/* SIDEBAR */
 .sidebar{
-width:240px;background:#00152e;color:white;
-height:100vh;position:fixed;top:0;left:0;
-padding-top:60px;display:none
+width:240px;
+background:#00152e;
+color:white;
+height:100vh;
+position:fixed;
+top:0;
+left:0;
+padding-top:60px;
+display:none;
 }
 
 .sidebar button{
-width:100%;padding:15px;background:none;
-border:none;color:white;text-align:left;cursor:pointer
+width:100%;
+padding:15px;
+background:none;
+border:none;
+color:white;
+text-align:left;
+cursor:pointer;
 }
 
 .sidebar button:hover{background:#0b2a55}
 
-.main{margin-left:0;padding:20px}
+/* MAIN */
+.main{
+margin-left:0;
+padding:20px;
+}
 
+/* CARDS */
 .card{
-background:white;padding:15px;margin:10px 0;
-border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-.hidden{display:none}
-
-input,select{
-width:100%;padding:10px;margin:5px 0
-}
-
-button{
-padding:10px;background:#002147;color:white;border:none;cursor:pointer
-}
-
-.banner img{
-width:100%;height:300px;object-fit:cover;border-radius:10px
-}
-
+/* LOGIN */
 .loginBox{
-max-width:350px;margin:80px auto;background:white;
-padding:20px;border-radius:10px
+max-width:350px;
+margin:80px auto;
+background:white;
+padding:20px;
+border-radius:10px;
 }
+
+/* INPUT */
+input,select{
+width:100%;
+padding:10px;
+margin:5px 0;
+}
+
+/* BUTTON */
+button{
+padding:10px;
+background:#002147;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+/* BANNER */
+.banner img{
+width:100%;
+height:300px;
+object-fit:cover;
+border-radius:10px;
+}
+
+/* HIDDEN */
+.hidden{display:none}
 </style>
 </head>
 
@@ -66,7 +108,7 @@ padding:20px;border-radius:10px
 <button onclick="logout()">Salir</button>
 </div>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR ADMIN -->
 <div class="sidebar" id="sidebar">
 <button onclick="showView('dashboard')">Dashboard</button>
 <button onclick="showView('users')">Usuarios</button>
@@ -87,32 +129,33 @@ padding:20px;border-radius:10px
 <!-- MAIN -->
 <div class="main">
 
+<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
-
 <div class="banner" id="banner"></div>
-
 <h3>Programas</h3>
 <div id="programList"></div>
-
 </div>
 
 <!-- USERS -->
 <div id="usersView" class="hidden">
 <h2>Usuarios</h2>
-<input id="newUserEmail" placeholder="Email nuevo usuario">
+
+<input id="newUserEmail" placeholder="Email">
 <input id="newUserPass" placeholder="Password">
 <select id="newUserRole">
 <option value="student">student</option>
 <option value="admin">admin</option>
 </select>
+
 <button onclick="createUser()">Crear usuario</button>
+
 <div id="usersList"></div>
 </div>
 
 <!-- PROGRAMS -->
 <div id="programsView" class="hidden">
 <h2>Programas</h2>
-<input id="programName">
+<input id="programName" placeholder="Nombre programa">
 <button onclick="addProgram()">Agregar</button>
 <div id="programAdminList"></div>
 </div>
@@ -121,7 +164,6 @@ padding:20px;border-radius:10px
 <div id="bannerView" class="hidden">
 <h2>Banner</h2>
 <input type="file" onchange="uploadBanner(this.files[0])">
-<div id="bannerList"></div>
 </div>
 
 </div>
@@ -132,34 +174,37 @@ padding:20px;border-radius:10px
 const firebaseConfig = {
   apiKey: "AIzaSyBFMzuABuWWLc_4UCYmZNIs0SpqlaLmggc",
   authDomain: "pagina-web-universitaria.firebaseapp.com",
-  databaseURL: "https://pagina-web-universitaria-default-rtdb.firebaseio.com",
   projectId: "pagina-web-universitaria",
-  storageBucket: "pagina-web-universitaria.firebasestorage.app",
-  messagingSenderId: "295859033709",
-  appId: "1:295859033709:web:7cdb2f9f2e7e0801e65164",
-  measurementId: "G-T3SL6356LE"
+  storageBucket: "pagina-web-universitaria.firebasestorage.app"
 };
 
 firebase.initializeApp(firebaseConfig);
 
-const auth=firebase.auth();
-const db=firebase.firestore();
-const storage=firebase.storage();
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-/* ================= ELEMENTOS ================= */
-const sidebar=document.getElementById("sidebar");
-const loginView=document.getElementById("loginView");
+/* ================= DOM FIX ================= */
+const sidebar = document.getElementById("sidebar");
+const loginView = document.getElementById("loginView");
+const msg = document.getElementById("msg");
+
+const usersList = document.getElementById("usersList");
+const programList = document.getElementById("programList");
+const programAdminList = document.getElementById("programAdminList");
+const banner = document.getElementById("banner");
 
 /* ================= LOGIN ================= */
 function register(){
 auth.createUserWithEmailAndPassword(email.value,password.value)
 .then(async u=>{
 await db.collection("users").doc(u.user.uid).set({
-email:email.value,
-role:"student"
+email: email.value,
+role: "student"
 });
-msg.innerText="Usuario creado";
-});
+msg.innerText = "Usuario creado";
+})
+.catch(e=>msg.innerText=e.message);
 }
 
 function login(){
@@ -171,23 +216,37 @@ auth.signInWithEmailAndPassword(email.value,password.value)
 /* ================= ROLE ================= */
 async function checkRole(uid){
 
-let doc=await db.collection("users").doc(uid).get();
+let doc = await db.collection("users").doc(uid).get();
 
 loginView.classList.add("hidden");
 
-if(doc.data().role==="admin"){
+/* SIEMPRE DASHBOARD */
+document.getElementById("dashboard").classList.remove("hidden");
+
+/* ADMIN */
+if(doc.exists && doc.data().role === "admin"){
 sidebar.style.display="block";
 }
 
-document.getElementById("dashboard").classList.remove("hidden");
+/* VISTA DEFAULT */
+showView("dashboard");
 
 loadAll();
 }
 
 /* ================= NAV ================= */
 function showView(v){
-document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
-document.getElementById(v+"View").classList.remove("hidden");
+
+["dashboard","users","programs","banner"].forEach(id=>{
+let el=document.getElementById(id);
+if(el) el.classList.add("hidden");
+});
+
+let target=document.getElementById(v+"View");
+if(target) target.classList.remove("hidden");
+
+let dash=document.getElementById(v);
+if(dash) dash.classList.remove("hidden");
 }
 
 /* ================= USERS ================= */
@@ -206,7 +265,10 @@ function loadUsers(){
 db.collection("users").onSnapshot(snap=>{
 let html="";
 snap.forEach(d=>{
-html+=`<div class="card">${d.data().email} - ${d.data().role}</div>`;
+html+=`
+<div class="card">
+${d.data().email} - ${d.data().role}
+</div>`;
 });
 usersList.innerHTML=html;
 });
