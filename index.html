@@ -5,111 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UNIVERSIDAD PRO SYSTEM</title>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <style>
-body{
-margin:0;
-font-family:Segoe UI;
-background:#f4f6f9;
-}
+body{margin:0;font-family:Segoe UI;background:#f4f6f9}
 
-/* TOPBAR */
 .topbar{
-background:#002147;
-color:white;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+background:#002147;color:white;padding:15px;
+display:flex;justify-content:space-between
 }
 
-/* SIDEBAR */
 .sidebar{
-width:240px;
-background:#00152e;
-color:white;
-height:100vh;
-position:fixed;
-left:0;
-top:0;
-padding-top:60px;
-display:none;
+width:240px;background:#00152e;color:white;
+height:100vh;position:fixed;top:0;left:0;
+padding-top:60px;display:none
 }
 
 .sidebar button{
-width:100%;
-padding:15px;
-background:none;
-border:none;
-color:white;
-text-align:left;
-cursor:pointer;
+width:100%;padding:15px;background:none;
+border:none;color:white;text-align:left;cursor:pointer
 }
 
-.sidebar button:hover{
-background:#0b2a55;
-}
+.sidebar button:hover{background:#0b2a55}
 
-/* MAIN */
-.main{
-margin-left:0;
-padding:20px;
-transition:0.3s;
-}
+.main{margin-left:0;padding:20px}
 
-.main.active{
-margin-left:240px;
-}
-
-/* CARDS */
 .card{
-background:white;
-padding:15px;
-margin:10px 0;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+background:white;padding:15px;margin:10px 0;
+border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)
 }
 
-/* LOGIN */
-.loginBox{
-max-width:350px;
-margin:80px auto;
-background:white;
-padding:20px;
-border-radius:10px;
-}
-
-/* INPUT */
-input,select{
-width:100%;
-padding:10px;
-margin:5px 0;
-}
-
-/* BUTTON */
-button{
-padding:10px;
-background:#002147;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-/* BANNER */
-.banner img{
-width:100%;
-height:300px;
-object-fit:cover;
-border-radius:10px;
-}
-
-/* HIDDEN */
 .hidden{display:none}
+
+input,select{
+width:100%;padding:10px;margin:5px 0
+}
+
+button{
+padding:10px;background:#002147;color:white;border:none;cursor:pointer
+}
+
+.banner img{
+width:100%;height:300px;object-fit:cover;border-radius:10px
+}
+
+.loginBox{
+max-width:350px;margin:80px auto;background:white;
+padding:20px;border-radius:10px
+}
 </style>
 </head>
 
@@ -122,29 +68,25 @@ border-radius:10px;
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<button onclick="view('dashboard')">Dashboard</button>
-<button onclick="view('users')">Usuarios</button>
-<button onclick="view('programs')">Programas</button>
-<button onclick="view('banner')">Banner</button>
+<button onclick="showView('dashboard')">Dashboard</button>
+<button onclick="showView('users')">Usuarios</button>
+<button onclick="showView('programs')">Programas</button>
+<button onclick="showView('banner')">Banner</button>
 </div>
-
-<!-- MAIN -->
-<div class="main" id="main">
 
 <!-- LOGIN -->
 <div id="loginView" class="loginBox">
 <h2>Login</h2>
-
 <input id="email" placeholder="Email">
 <input id="password" type="password" placeholder="Password">
-
 <button onclick="login()">Entrar</button>
 <button onclick="register()">Registro</button>
-
 <p id="msg"></p>
 </div>
 
-<!-- DASHBOARD -->
+<!-- MAIN -->
+<div class="main">
+
 <div id="dashboard" class="hidden">
 
 <div class="banner" id="banner"></div>
@@ -154,14 +96,20 @@ border-radius:10px;
 
 </div>
 
-<!-- ADMIN -->
-<div id="adminPanel" class="hidden">
-
+<!-- USERS -->
 <div id="usersView" class="hidden">
 <h2>Usuarios</h2>
+<input id="newUserEmail" placeholder="Email nuevo usuario">
+<input id="newUserPass" placeholder="Password">
+<select id="newUserRole">
+<option value="student">student</option>
+<option value="admin">admin</option>
+</select>
+<button onclick="createUser()">Crear usuario</button>
 <div id="usersList"></div>
 </div>
 
+<!-- PROGRAMS -->
 <div id="programsView" class="hidden">
 <h2>Programas</h2>
 <input id="programName">
@@ -169,11 +117,11 @@ border-radius:10px;
 <div id="programAdminList"></div>
 </div>
 
+<!-- BANNER -->
 <div id="bannerView" class="hidden">
-<h2>Subir Banner</h2>
+<h2>Banner</h2>
 <input type="file" onchange="uploadBanner(this.files[0])">
-</div>
-
+<div id="bannerList"></div>
 </div>
 
 </div>
@@ -182,72 +130,82 @@ border-radius:10px;
 
 /* ================= FIREBASE ================= */
 const firebaseConfig = {
-  apiKey: "AIzaSyBFMzuABuWWLc_4UCYmZNIs0SpqlaLmggc",
-  authDomain: "pagina-web-universitaria.firebaseapp.com",
-  databaseURL: "https://pagina-web-universitaria-default-rtdb.firebaseio.com",
-  projectId: "pagina-web-universitaria",
-  storageBucket: "pagina-web-universitaria.firebasestorage.app",
-  messagingSenderId: "295859033709",
-  appId: "1:295859033709:web:7cdb2f9f2e7e0801e65164",
-  measurementId: "G-T3SL6356LE"
+apiKey:"TU_API_KEY",
+authDomain:"TU_AUTH_DOMAIN",
+projectId:"TU_PROJECT_ID",
+storageBucket:"TU_STORAGE_BUCKET"
 };
 
 firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+const auth=firebase.auth();
+const db=firebase.firestore();
+const storage=firebase.storage();
 
 /* ================= ELEMENTOS ================= */
-const sidebar = document.getElementById("sidebar");
-const main = document.getElementById("main");
-const loginView = document.getElementById("loginView");
-const dashboard = document.getElementById("dashboard");
-const adminPanel = document.getElementById("adminPanel");
+const sidebar=document.getElementById("sidebar");
+const loginView=document.getElementById("loginView");
 
 /* ================= LOGIN ================= */
 function register(){
 auth.createUserWithEmailAndPassword(email.value,password.value)
 .then(async u=>{
 await db.collection("users").doc(u.user.uid).set({
-email: email.value,
-role: "student"
+email:email.value,
+role:"student"
 });
 msg.innerText="Usuario creado";
-})
-.catch(e=>msg.innerText=e.message);
+});
 }
 
 function login(){
 auth.signInWithEmailAndPassword(email.value,password.value)
-.then(u=>{
-checkRole(u.user.uid);
-})
-.catch(e=>{
-msg.innerText=e.message;
-});
+.then(u=>checkRole(u.user.uid))
+.catch(e=>msg.innerText=e.message);
 }
 
 /* ================= ROLE ================= */
 async function checkRole(uid){
-let doc = await db.collection("users").doc(uid).get();
+
+let doc=await db.collection("users").doc(uid).get();
 
 loginView.classList.add("hidden");
-dashboard.classList.remove("hidden");
 
-if(doc.exists && doc.data().role==="admin"){
+if(doc.data().role==="admin"){
 sidebar.style.display="block";
-adminPanel.classList.remove("hidden");
-loadAdmin();
 }
 
-loadData();
+document.getElementById("dashboard").classList.remove("hidden");
+
+loadAll();
 }
 
-/* ================= DATA ================= */
-function loadData(){
-loadPrograms();
-loadBanner();
+/* ================= NAV ================= */
+function showView(v){
+document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
+document.getElementById(v+"View").classList.remove("hidden");
+}
+
+/* ================= USERS ================= */
+function createUser(){
+auth.createUserWithEmailAndPassword(newUserEmail.value,newUserPass.value)
+.then(u=>{
+db.collection("users").doc(u.user.uid).set({
+email:newUserEmail.value,
+role:newUserRole.value
+});
+loadUsers();
+});
+}
+
+function loadUsers(){
+db.collection("users").onSnapshot(snap=>{
+let html="";
+snap.forEach(d=>{
+html+=`<div class="card">${d.data().email} - ${d.data().role}</div>`;
+});
+usersList.innerHTML=html;
+});
 }
 
 /* ================= PROGRAMS ================= */
@@ -258,39 +216,12 @@ db.collection("programs").add({name:programName.value});
 function loadPrograms(){
 db.collection("programs").onSnapshot(snap=>{
 let html="";
-snap.forEach(doc=>{
-html+=`<div class="card">${doc.data().name}</div>`;
+snap.forEach(d=>{
+html+=`<div class="card">${d.data().name}</div>`;
 });
 programList.innerHTML=html;
 programAdminList.innerHTML=html;
 });
-}
-
-/* ================= USERS ================= */
-function loadAdmin(){
-db.collection("users").onSnapshot(snap=>{
-let html="";
-snap.forEach(doc=>{
-html+=`
-<div class="card">
-${doc.data().email}
-<select onchange="changeRole('${doc.id}',this.value)">
-<option value="student">student</option>
-<option value="admin">admin</option>
-</select>
-<button onclick="deleteUser('${doc.id}')">Eliminar</button>
-</div>`;
-});
-usersList.innerHTML=html;
-});
-}
-
-function changeRole(id,role){
-db.collection("users").doc(id).update({role});
-}
-
-function deleteUser(id){
-db.collection("users").doc(id).delete();
 }
 
 /* ================= BANNER ================= */
@@ -309,20 +240,22 @@ db.collection("banner").add({url});
 function loadBanner(){
 db.collection("banner").onSnapshot(snap=>{
 images=[];
-snap.forEach(doc=>images.push(doc.data().url));
+snap.forEach(d=>images.push(d.data().url));
 });
 }
 
 setInterval(()=>{
-if(images.length>0){
+if(images.length){
 index=(index+1)%images.length;
 banner.innerHTML=`<img src="${images[index]}">`;
 }
 },3000);
 
-/* ================= LOGOUT ================= */
-function logout(){
-auth.signOut().then(()=>location.reload());
+/* ================= INIT ================= */
+function loadAll(){
+loadUsers();
+loadPrograms();
+loadBanner();
 }
 
 </script>
