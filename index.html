@@ -3,231 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Universitario - Réplica</title>
+    <title>Uniciencia - Réplica Funcional</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
-            --azul-oscuro: #002d55;
-            --rojo-principal: #e30613;
-            --gris-claro: #f4f4f4;
+            --azul: #002d55;
+            --rojo: #e30613;
+            --gris-fondo: #f8f9fa;
         }
 
-        body { 
-            margin: 0; 
-            font-family: 'Montserrat', sans-serif; 
-            color: #333;
-            background-color: white;
-        }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
-        /* BARRA SUPERIOR AZUL */
-        .top-header {
-            background-color: var(--azul-oscuro);
-            padding: 8px 10%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            font-size: 12px;
-        }
+        /* HEADER & NAV */
+        .top-bar { background: var(--azul); color: white; padding: 10px 10%; display: flex; justify-content: space-between; font-size: 12px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 10%; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .nav-links a { text-decoration: none; color: var(--azul); font-weight: bold; margin-left: 20px; font-size: 13px; }
 
-        .btn-sede {
-            background-color: var(--rojo-principal);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-        }
+        /* BANNER */
+        .swiper { width: 100%; height: 500px; }
+        .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: center; color: white; padding-left: 10%; position: relative; }
+        .swiper-slide::after { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index: 1; }
+        .slide-content { position: relative; z-index: 2; max-width: 500px; }
 
-        /* NAVBAR PRINCIPAL */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 10%;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+        /* SECCIÓN BIENVENIDA (Basada en tu imagen 2) */
+        .welcome-section { display: flex; align-items: center; padding: 60px 10%; gap: 50px; flex-wrap: wrap; }
+        .welcome-image { flex: 1; min-width: 300px; }
+        .welcome-image img { width: 100%; border-radius: 10px; }
+        .welcome-text { flex: 1; min-width: 300px; }
+        .welcome-text h2 { color: var(--azul); font-size: 32px; margin-bottom: 20px; }
+        .welcome-text p { line-height: 1.6; color: #555; }
+        .btn-calendario { background: var(--rojo); color: white; padding: 15px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-block; text-decoration: none; margin-right: 10px; }
 
-        .logo img { height: 60px; }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--azul-oscuro);
-            font-weight: 700;
-            margin-left: 20px;
-            font-size: 13px;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--rojo-principal); }
-
-        /* BANNER / CARRUSEL */
-        .swiper { width: 100%; height: 550px; }
-
-        .swiper-slide {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            padding-left: 10%;
-        }
-
-        /* Overlay oscuro para que el texto se lea mejor */
-        .swiper-slide::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%);
-        }
-
-        .slide-content {
-            position: relative;
-            z-index: 10;
-            color: white;
-            max-width: 600px;
-        }
-
-        .slide-content h2 {
-            font-size: 42px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .slide-content p {
-            font-size: 18px;
-            background: rgba(255,255,255,0.2);
-            display: inline-block;
-            padding: 5px 15px;
-            backdrop-filter: blur(5px);
-        }
-
-        /* Botones del carrusel */
-        .swiper-button-next, .swiper-button-prev {
-            color: white !important;
-            background: rgba(0,0,0,0.3);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-
-        /* SECCIÓN DE BOTONES INFERIORES */
-        .bottom-actions {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 40px 0;
-        }
-
-        .card-btn {
-            background-color: var(--rojo-principal);
-            color: white;
-            padding: 20px 40px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .card-btn:hover { transform: translateY(-5px); }
+        /* SECCIÓN TARJETAS (Basada en tu imagen 1) */
+        .cards-container { display: flex; justify-content: center; gap: 20px; padding: 60px 10%; background: var(--gris-fondo); flex-wrap: wrap; }
+        .info-card { background: white; width: 300px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        .info-card:hover { transform: translateY(-10px); }
+        .card-header { padding: 40px; color: white; font-size: 60px; position: relative; }
+        .card-header i { position: relative; z-index: 2; }
+        .card-header::after { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; opacity: 0.8; }
+        
+        .bg-rojo { background-color: var(--rojo); }
+        .bg-azul { background-color: var(--azul); }
+        
+        .card-body { padding: 30px; }
+        .card-body h3 { color: #333; text-transform: uppercase; margin-bottom: 15px; }
+        .card-body p { font-size: 14px; color: #777; margin-bottom: 20px; }
+        .card-body a { color: #888; text-decoration: none; font-weight: bold; font-size: 12px; text-transform: uppercase; }
 
     </style>
 </head>
 <body>
 
-    <div class="top-header">
-        <button class="btn-sede">ESCOGE TU SEDE ▼</button>
-        <div class="top-links">U-VIRTUAL | SIGA | PQRSD | PSE</div>
+    <div class="top-bar">
+        <span>ESCOGE TU SEDE ▼</span>
+        <div>U-VIRTUAL | SIGA | PQRSD | PSE</div>
     </div>
-
     <header class="navbar">
-        <div class="logo">
-            <h1 style="color: var(--azul-oscuro); margin:0;">MI<span style="color:var(--rojo-principal)">UNIVERSIDAD</span></h1>
-        </div>
+        <div class="logo"><h2>UNI<span style="color:var(--rojo)">CIENCIA</span></h2></div>
         <nav class="nav-links">
             <a href="#">INICIO</a>
             <a href="#">NOSOTROS</a>
             <a href="#">PROGRAMAS</a>
-            <a href="#">INVESTIGACIÓN</a>
+            <a href="#">VIVE LA U</a>
         </nav>
     </header>
 
     <div class="swiper">
-        <div class="swiper-wrapper" id="banner-container">
-            </div>
-        
+        <div class="swiper-wrapper" id="banner-list"></div>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
     </div>
 
-    <div class="bottom-actions">
-        <a href="#" class="card-btn">CALENDARIO ACADÉMICO 2026 - I</a>
-        <a href="#" class="card-btn">CALENDARIO ACADÉMICO 2025 - II</a>
-    </div>
+    <section class="welcome-section">
+        <div class="welcome-image">
+            <img src="https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98?q=80&w=800" alt="Estudiantes">
+        </div>
+        <div class="welcome-text">
+            <h3>BIENVENIDO A</h3>
+            <h2>UNICIENCIA</h2>
+            <p>La Corporación Universitaria de Ciencia y Desarrollo se reconoce como la primera Universidad en el Oriente Colombiano, capaz de optimizar y extender horarios a las necesidades de la comunidad.</p>
+            <p style="color: var(--azul); font-weight: bold;">Ver derechos pecuniarios 2025</p>
+            <a href="#" class="btn-calendario">CALENDARIO 2026-I</a>
+            <a href="#" class="btn-calendario">CALENDARIO 2025-II</a>
+        </div>
+    </section>
+
+    <section class="cards-container">
+        <div class="info-card">
+            <div class="card-header bg-rojo"><i class="fas fa-edit"></i></div>
+            <div class="card-body">
+                <h3>Inscripción</h3>
+                <p>Sé parte de nuestra comunidad. Uniciencia te acerca a tus metas. No esperes más.</p>
+                <a href="#">Formulario de Inscripción ></a>
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="card-header bg-azul"><i class="fas fa-user-graduate"></i></div>
+            <div class="card-body">
+                <h3>Estudiante</h3>
+                <p>Tutoriales, guías, procesos de reintegro y grado, entidades financieras y más.</p>
+                <a href="#">Ir a la sección ></a>
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="card-header bg-rojo"><i class="fas fa-search-plus"></i></div>
+            <div class="card-body">
+                <h3>Convocatorias</h3>
+                <p>¿Quieres hacer parte de nuestro equipo? No te pierdas nuestras convocatorias.</p>
+                <a href="#">Ver ofertas ></a>
+            </div>
+        </div>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    
     <script>
-        // --- CONFIGURACIÓN DE IMÁGENES ---
-        // Aquí puedes agregar cuantas imágenes quieras. 
-        // Solo copia una línea y cambia el link y el texto.
-        const misImagenes = [
-            {
-                url: 'https://images.unsplash.com/photo-1523050335392-93851179ae22?q=80&w=1200',
-                titulo: 'Innovación y Tecnología',
-                detalle: 'Taller 12 de Mayo - Modalidad Mixta'
-            },
-            {
-                url: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=1200',
-                titulo: 'Inscripciones Abiertas',
-                detalle: 'Únete a nuestra comunidad académica'
-            },
-            {
-                url: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1200',
-                titulo: 'Nuevos Laboratorios',
-                detalle: 'Equipamiento de última generación'
-            }
+        // --- CONFIGURACIÓN DE BANNER (Edita aquí las fotos) ---
+        const slides = [
+            { url: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd?q=80&w=1200', titulo: 'Gerencia Estratégica', texto: 'Foro Académico 2026' },
+            { url: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200', titulo: 'Liderazgo Moderno', texto: 'Inscríbete hoy mismo' }
         ];
 
-        // Función para cargar las imágenes en el banner
-        const container = document.getElementById('banner-container');
-        
-        misImagenes.forEach(img => {
-            const slide = document.createElement('div');
-            slide.className = 'swiper-slide';
-            slide.style.backgroundImage = `url('${img.url}')`;
-            slide.innerHTML = `
-                <div class="slide-content">
-                    <h2>${img.titulo}</h2>
-                    <p>${img.detalle}</p>
-                </div>
-            `;
-            container.appendChild(slide);
+        const bannerList = document.getElementById('banner-list');
+        slides.forEach(s => {
+            bannerList.innerHTML += `
+                <div class="swiper-slide" style="background-image:url('${s.url}')">
+                    <div class="slide-content">
+                        <h1>${s.titulo}</h1>
+                        <p>${s.texto}</p>
+                    </div>
+                </div>`;
         });
 
-        // Inicializar el movimiento automático
         const swiper = new Swiper('.swiper', {
             loop: true,
-            speed: 1000,
-            autoplay: {
-                delay: 5000, // Cambia cada 5 segundos
-                disableOnInteraction: false,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
+            autoplay: { delay: 4000 },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
         });
     </script>
 </body>
