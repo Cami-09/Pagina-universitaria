@@ -3,63 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réplica Uniciencia</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <title>Portal Universitario - Réplica</title>
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; }
-        
-        /* Barra Superior Azul */
-        .top-bar {
-            background-color: #003366;
-            color: white;
-            padding: 10px 5%;
+        :root {
+            --azul-oscuro: #002d55;
+            --rojo-principal: #e30613;
+            --gris-claro: #f4f4f4;
+        }
+
+        body { 
+            margin: 0; 
+            font-family: 'Montserrat', sans-serif; 
+            color: #333;
+            background-color: white;
+        }
+
+        /* BARRA SUPERIOR AZUL */
+        .top-header {
+            background-color: var(--azul-oscuro);
+            padding: 8px 10%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: white;
+            font-size: 12px;
         }
 
-        /* Logo y Navegación */
-        .header-main {
+        .btn-sede {
+            background-color: var(--rojo-principal);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* NAVBAR PRINCIPAL */
+        .navbar {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #e1e1e1;
+            padding: 15px 10%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .logo img { height: 50px; }
-        nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; }
 
-        /* Estilos del Banner (Carrusel) */
-        .swiper { width: 100%; height: 450px; }
+        .logo img { height: 60px; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--azul-oscuro);
+            font-weight: 700;
+            margin-left: 20px;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--rojo-principal); }
+
+        /* BANNER / CARRUSEL */
+        .swiper { width: 100%; height: 550px; }
+
         .swiper-slide {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative;
             background-size: cover;
             background-position: center;
-        }
-        .banner-content {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 30px;
-            max-width: 500px;
-            border-left: 5px solid #d32f2f;
+            display: flex;
+            align-items: center;
+            padding-left: 10%;
         }
 
-        /* Botones de navegación */
-        .swiper-button-next, .swiper-button-prev { color: #333; }
+        /* Overlay oscuro para que el texto se lea mejor */
+        .swiper-slide::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%);
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 10;
+            color: white;
+            max-width: 600px;
+        }
+
+        .slide-content h2 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .slide-content p {
+            font-size: 18px;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 5px 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Botones del carrusel */
+        .swiper-button-next, .swiper-button-prev {
+            color: white !important;
+            background: rgba(0,0,0,0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        /* SECCIÓN DE BOTONES INFERIORES */
+        .bottom-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .card-btn {
+            background-color: var(--rojo-principal);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card-btn:hover { transform: translateY(-5px); }
+
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <button style="background: red; color: white; border: none; padding: 5px 10px;">ESCOGE TU SEDE</button>
-        <div>U-VIRTUAL | SIGA | PQRSD | PSE</div>
+    <div class="top-header">
+        <button class="btn-sede">ESCOGE TU SEDE ▼</button>
+        <div class="top-links">U-VIRTUAL | SIGA | PQRSD | PSE</div>
     </div>
 
-    <header class="header-main">
-        <div class="logo"><strong>UNICiencia</strong></div>
-        <nav>
+    <header class="navbar">
+        <div class="logo">
+            <h1 style="color: var(--azul-oscuro); margin:0;">MI<span style="color:var(--rojo-principal)">UNIVERSIDAD</span></h1>
+        </div>
+        <nav class="nav-links">
             <a href="#">INICIO</a>
             <a href="#">NOSOTROS</a>
             <a href="#">PROGRAMAS</a>
@@ -68,32 +159,65 @@
     </header>
 
     <div class="swiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide" style="background-image: url('https://via.placeholder.com/1200x450/f0f0f0?text=Banner+1')">
-                <div class="banner-content">
-                    <h2>Gerencia Estratégica</h2>
-                    <p>18 de abril - 2026 | 8:15 a.m.</p>
-                </div>
+        <div class="swiper-wrapper" id="banner-container">
             </div>
-            <div class="swiper-slide" style="background-image: url('https://via.placeholder.com/1200x450/e0e0e0?text=Banner+2')">
-                <div class="banner-content">
-                    <h2>Inscripciones Abiertas</h2>
-                    <p>Calendario Académico 2026-I</p>
-                </div>
-            </div>
-        </div>
         
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
         <div class="swiper-pagination"></div>
     </div>
 
+    <div class="bottom-actions">
+        <a href="#" class="card-btn">CALENDARIO ACADÉMICO 2026 - I</a>
+        <a href="#" class="card-btn">CALENDARIO ACADÉMICO 2025 - II</a>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
     <script>
+        // --- CONFIGURACIÓN DE IMÁGENES ---
+        // Aquí puedes agregar cuantas imágenes quieras. 
+        // Solo copia una línea y cambia el link y el texto.
+        const misImagenes = [
+            {
+                url: 'https://images.unsplash.com/photo-1523050335392-93851179ae22?q=80&w=1200',
+                titulo: 'Innovación y Tecnología',
+                detalle: 'Taller 12 de Mayo - Modalidad Mixta'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe1?q=80&w=1200',
+                titulo: 'Inscripciones Abiertas',
+                detalle: 'Únete a nuestra comunidad académica'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1200',
+                titulo: 'Nuevos Laboratorios',
+                detalle: 'Equipamiento de última generación'
+            }
+        ];
+
+        // Función para cargar las imágenes en el banner
+        const container = document.getElementById('banner-container');
+        
+        misImagenes.forEach(img => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.style.backgroundImage = `url('${img.url}')`;
+            slide.innerHTML = `
+                <div class="slide-content">
+                    <h2>${img.titulo}</h2>
+                    <p>${img.detalle}</p>
+                </div>
+            `;
+            container.appendChild(slide);
+        });
+
+        // Inicializar el movimiento automático
         const swiper = new Swiper('.swiper', {
             loop: true,
+            speed: 1000,
             autoplay: {
-                delay: 4000, // Se mueve solo cada 4 segundos
+                delay: 5000, // Cambia cada 5 segundos
                 disableOnInteraction: false,
             },
             navigation: {
