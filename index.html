@@ -3,165 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Uniciencia - Completo</title>
+    <title>Uniciencia | Corporación Universitaria</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --azul: #002d55; --rojo: #e30613; --gris: #f4f4f4; --dark: #1a1d23; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; background: white; color: #333; }
-        
-        /* HEADER & NAVBAR DESPLEGABLE */
-        .top-bar { background: var(--azul); color: white; padding: 10px 10%; display: flex; justify-content: space-between; font-size: 11px; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 10%; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
-        .nav-item { position: relative; margin-left: 15px; }
-        .nav-item a { text-decoration: none; color: var(--azul); font-weight: bold; font-size: 12px; padding: 10px 0; display: block; }
+        /* CSS INTEGRADO PARA FACILIDAD */
+        :root { --azul: #002d55; --rojo: #e30613; --gris-f: #f8f9fa; --texto: #333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Montserrat', sans-serif; color: var(--texto); line-height: 1.6; }
 
-        /* Submenú Desplegable */
-        .dropdown {
-            position: absolute; top: 100%; left: 0; background: white;
-            min-width: 220px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: none; border-top: 3px solid var(--azul);
-        }
-        .dropdown a { color: #555 !important; padding: 12px 20px; border-bottom: 1px solid #eee; }
-        .dropdown a:hover { background: var(--gris); color: var(--rojo) !important; }
+        /* TOP BAR */
+        .top-bar { background: var(--azul); color: white; padding: 10px 10%; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; }
+        .btn-sede { background: var(--rojo); color: white; border: none; padding: 5px 12px; cursor: pointer; text-transform: uppercase; border-radius: 2px; }
+
+        /* NAVBAR & DROPDOWNS */
+        .header-main { display: flex; justify-content: space-between; align-items: center; padding: 15px 10%; background: white; sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo img { height: 55px; }
+        
+        .nav-menu { display: flex; list-style: none; }
+        .nav-item { position: relative; padding: 10px 15px; }
+        .nav-item > a { text-decoration: none; color: var(--azul); font-weight: 700; font-size: 13px; text-transform: uppercase; }
+        
+        .dropdown { position: absolute; top: 100%; left: 0; background: white; min-width: 240px; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-top: 3px solid var(--azul); }
+        .dropdown a { display: block; padding: 12px 20px; text-decoration: none; color: #666; font-size: 13px; border-bottom: 1px solid #eee; transition: 0.3s; }
+        .dropdown a:hover { background: var(--gris-f); color: var(--rojo); padding-left: 25px; }
         .nav-item:hover .dropdown { display: block; }
 
-        /* BANNER DINÁMICO */
-        .swiper { width: 100%; height: 500px; }
-        .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: center; padding-left: 10%; color: white; position: relative; }
-        .swiper-slide::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
-        .slide-content { position: relative; z-index: 2; }
+        /* BANNER (SWIPER) */
+        .main-banner { width: 100%; height: 500px; background: #000; }
+        .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: center; color: white; padding-left: 10%; }
+        .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1; }
+        .slide-content { position: relative; z-index: 2; max-width: 600px; }
+        .slide-content h2 { font-size: 45px; line-height: 1.1; margin-bottom: 15px; }
 
-        /* BOTONES DEL BANNER (Flechas) */
-        .swiper-button-next, .swiper-button-prev { color: white !important; background: rgba(0,0,0,0.3); width: 50px; height: 50px; border-radius: 50%; }
+        /* SECCIONES DINÁMICAS */
+        .content-section { display: none; padding: 60px 10%; animation: fadeIn 0.5s; }
+        .active-section { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* DIRECTORIO ADMINISTRATIVO (Sección Oculta inicialmente) */
-        #directorio { padding: 60px 10%; display: none; }
-        .directorio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .staff-card { border: 1px solid #eee; padding: 20px; text-align: center; border-radius: 8px; }
-        .staff-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--azul); }
-        .staff-card h4 { color: var(--azul); margin: 10px 0 5px; }
-        .staff-card p { font-size: 13px; color: #777; margin: 0; }
+        /* DIRECTORIO ESTILO UNICIENCIA */
+        .dir-header { border-left: 5px solid var(--rojo); padding-left: 15px; margin-bottom: 40px; }
+        .dir-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .person-card { background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; text-align: center; transition: 0.3s; }
+        .person-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .person-card img { width: 100%; height: 250px; object-fit: cover; background: #eee; }
+        .person-info { padding: 20px; }
+        .person-info h4 { color: var(--azul); text-transform: uppercase; margin-bottom: 5px; }
+        .person-info p { color: var(--rojo); font-weight: bold; font-size: 13px; }
 
         /* FOOTER */
-        footer { background: var(--dark); color: #bbb; padding: 60px 10% 20px; font-size: 13px; }
+        footer { background: var(--dark); background-color: #1a1d23; color: #aaa; padding: 60px 10% 20px; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
-        .footer-bottom { border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 11px; margin-top: 30px;}
+        .footer-col h4 { color: white; margin-bottom: 20px; font-size: 16px; border-bottom: 2px solid var(--rojo); display: inline-block; }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        <span>ESCOGE TU SEDE ▼</span>
-        <div>U-VIRTUAL | SIGA | PQRSD | PSE</div>
+        <button class="btn-sede">Escoge tu sede <i class="fas fa-caret-down"></i></button>
+        <div class="links-fast">U-VIRTUAL | SIGA | PQRSD | PSE</div>
     </div>
 
-    <header class="navbar">
-        <div class="logo"><h2>UNI<span style="color:var(--rojo)">CIENCIA</span></h2></div>
+    <header class="header-main">
+        <div class="logo">
+            <h1 style="color:var(--azul); font-weight: 900; letter-spacing: -2px;">UNI<span style="color:var(--rojo)">CIENCIA</span></h1>
+        </div>
         <nav>
-            <ul class="nav-links">
-                <li class="nav-item"><a href="#" onclick="showSection('inicio')">INICIO</a></li>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" onclick="changeTab('home')">Inicio</a></li>
                 <li class="nav-item">
-                    <a href="#">NOSOTROS <i class="fas fa-chevron-down"></i></a>
+                    <a href="#">Nosotros <i class="fas fa-chevron-down" style="font-size: 10px;"></i></a>
                     <div class="dropdown">
-                        <a href="#" onclick="showSection('directorio')">Directorio administrativo</a>
+                        <a href="#" onclick="changeTab('directorio')">Directorio Administrativo</a>
+                        <a href="#" onclick="changeTab('mision')">Misión y Visión</a>
                         <a href="#">Estructura Organizacional</a>
-                        <a href="#">Misión y Visión</a>
                     </div>
                 </li>
-                <li class="nav-item"><a href="#">PROGRAMAS</a></li>
-                <li class="nav-item"><a href="#">VIVE LA U</a></li>
+                <li class="nav-item"><a href="#">Programas</a></li>
+                <li class="nav-item"><a href="#">Investigación</a></li>
             </ul>
         </nav>
     </header>
 
-    <div id="inicio">
-        <div class="swiper">
-            <div class="swiper-wrapper" id="banner-list"></div>
+    <main id="home" class="content-section active-section" style="padding: 0;">
+        <div class="swiper main-banner">
+            <div class="swiper-wrapper" id="dynamic-slides">
+                </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-pagination"></div>
         </div>
         
-        <h2 style="text-align:center; margin-top:40px;">BIENVENIDO A UNICIENCIA</h2>
-    </div>
+        <div style="padding: 60px 10%; text-align: center;">
+            <h2>Bienvenido a Uniciencia</h2>
+            <p>Líderes en formación profesional con calidad humana.</p>
+        </div>
+    </main>
 
-    <section id="directorio">
-        <h2 style="color:var(--azul); border-bottom: 2px solid var(--rojo); padding-bottom: 10px;">Directorio Administrativo</h2>
-        <div class="directorio-grid">
-            <div class="staff-card">
-                <img src="https://via.placeholder.com/150" alt="Rector">
-                <h4>Nombre del Rector</h4>
-                <p>Rectoría</p>
-                <small>rectoria@uniciencia.edu.co</small>
-            </div>
-            <div class="staff-card">
-                <img src="https://via.placeholder.com/150" alt="Secretaría">
-                <h4>Nombre del Secretario</h4>
-                <p>Secretaría General</p>
-                <small>secretaria@uniciencia.edu.co</small>
-            </div>
+    <section id="directorio" class="content-section">
+        <div class="dir-header">
+            <h2 style="color: var(--azul);">Directorio Administrativo</h2>
+            <p>Conoce al equipo que lidera nuestra institución.</p>
+        </div>
+        <div class="dir-grid" id="staff-list">
             </div>
     </section>
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col"><h4>Sede Bucaramanga</h4><p>Carrera 12 # 37-14</p></div>
-            <div class="footer-col"><h4>Navega</h4><p>Transparencia</p><p>Saber Pro</p></div>
+            <div class="footer-col">
+                <h4>Bucaramanga</h4>
+                <p>Carrera 12 # 37-14</p>
+                <p>PBX: (607) 6306060</p>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces</h4>
+                <p>Transparencia</p>
+                <p>Saber Pro</p>
+            </div>
         </div>
-        <div class="footer-bottom">&copy; 2026 UNICIENCIA.</div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // CONFIGURACIÓN DE BANNER (AHORA CON AUTOPLAY Y BOTONES)
-        const slides = [
-            { url: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd', titulo: 'Gerencia Estratégica', texto: 'Inscríbete ahora' },
-            { url: 'https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98', titulo: 'Admisiones 2026', texto: 'Calendario abierto' }
+        // 1. CONFIGURACIÓN DEL BANNER (Editable)
+        const bannerData = [
+            { img: 'https://images.unsplash.com/photo-1523050335392-93851179ae22', t: 'Foro Académico 2026', d: 'Gerencia Estratégica y Liderazgo' },
+            { img: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846', t: 'Admisiones Abiertas', d: 'Inicia tu futuro hoy mismo' }
         ];
 
-        const bannerList = document.getElementById('banner-list');
-        slides.forEach(s => {
-            bannerList.innerHTML += `
-                <div class="swiper-slide" style="background-image:url('${s.url}')">
-                    <div class="slide-content"><h1>${s.titulo}</h1><p>${s.texto}</p></div>
-                </div>`;
-        });
+        // 2. DATOS DEL DIRECTORIO (Editable)
+        const staffData = [
+            { nombre: 'Dra. María Elisa Martínez', cargo: 'Directora de Recursos Humanos', foto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400' },
+            { nombre: 'Dr. Lady Carolina Monsalve', cargo: 'Docente en Dirección de Empresas', foto: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400' }
+        ];
 
-        // Inicializar Swiper con todas las funciones
-        const swiper = new Swiper('.swiper', {
-            loop: true,
-            autoplay: {
-                delay: 3000, // Cambia cada 3 segundos automáticamente
-                disableOnInteraction: false, // No se detiene si el usuario hace click
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-        });
+        // RENDERIZAR DINÁMICAMENTE
+        function initApp() {
+            const banner = document.getElementById('dynamic-slides');
+            bannerData.forEach(s => {
+                banner.innerHTML += `
+                    <div class="swiper-slide" style="background-image: url('${s.img}')">
+                        <div class="overlay"></div>
+                        <div class="slide-content"><h2>${s.t}</h2><p>${s.d}</p></div>
+                    </div>`;
+            });
 
-        // FUNCIÓN PARA CAMBIAR ENTRE INICIO Y DIRECTORIO
-        function showSection(sectionId) {
-            document.getElementById('inicio').style.display = 'none';
-            document.getElementById('directorio').style.display = 'none';
-            
-            document.getElementById(sectionId).style.display = 'block';
-            
-            // Si volvemos a inicio, reiniciamos el swiper para que no falle
-            if(sectionId === 'inicio') {
-                swiper.update();
-            }
+            const staff = document.getElementById('staff-list');
+            staffData.forEach(p => {
+                staff.innerHTML += `
+                    <div class="person-card">
+                        <img src="${p.foto}" alt="${p.nombre}">
+                        <div class="person-info">
+                            <h4>${p.nombre}</h4>
+                            <p>${p.cargo}</p>
+                        </div>
+                    </div>`;
+            });
+
+            // Iniciar Swiper con Autoplay y Flechas
+            new Swiper('.swiper', {
+                loop: true,
+                autoplay: { delay: 4000 },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                pagination: { el: '.swiper-pagination', clickable: true },
+            });
         }
+
+        // LÓGICA DE NAVEGACIÓN (Single Page Application)
+        function changeTab(id) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            window.scrollTo(0, 0);
+        }
+
+        window.onload = initApp;
     </script>
 </body>
 </html>
