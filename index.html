@@ -2,22 +2,95 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>UNICIENCIA PRO SYSTEM</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNICIENCIA SYSTEM PRO</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
 <style>
-body{font-family:Arial;margin:0;background:#f4f6f9}
-header{background:#002147;color:#fff;padding:15px;display:flex;justify-content:space-between}
-nav a{color:#fff;margin:10px;cursor:pointer}
-.section{display:none;padding:40px}
-.active{display:block}
-.card{background:#fff;padding:20px;margin:10px;border-radius:10px}
-input{padding:10px;margin:5px;width:100%}
-button{padding:10px;background:#002147;color:#fff;border:none}
+body{margin:0;font-family:Segoe UI;background:#eef1f5}
+
+/* NAVBAR */
+header{
+background:#002147;
+color:#fff;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+nav a{
+color:white;
+margin:10px;
+cursor:pointer;
+font-weight:500;
+}
+
+/* LAYOUT */
+.container{
+display:flex;
+}
+
+/* SIDEBAR ADMIN */
+.sidebar{
+width:220px;
+background:#00152e;
+color:white;
+height:100vh;
+padding:20px;
+display:none;
+}
+
+.sidebar div{
+margin:15px 0;
+cursor:pointer;
+}
+
+/* MAIN */
+.main{
+flex:1;
+padding:30px;
+}
+
+/* CARDS */
+.card{
+background:white;
+padding:20px;
+margin:10px 0;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* FORM */
+input{
+padding:10px;
+width:100%;
+margin:5px 0;
+}
+
+button{
+padding:10px;
+background:#002147;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+/* HERO */
+.hero{
+background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1');
+background-size:cover;
+color:white;
+padding:100px;
+text-align:center;
+}
+
+/* HIDE */
+.hidden{display:none}
 </style>
 </head>
 
@@ -26,110 +99,177 @@ button{padding:10px;background:#002147;color:#fff;border:none}
 <header>
 <h2>UNICIENCIA</h2>
 <nav>
-<a onclick="show('inicio')">Inicio</a>
-<a onclick="show('programas')">Programas</a>
-<a onclick="show('login')">Login</a>
-<a onclick="show('admin')">Admin</a>
+<a onclick="goHome()">Inicio</a>
+<a onclick="goLogin()">Login</a>
 </nav>
 </header>
 
-<!-- INICIO -->
-<div id="inicio" class="section active">
-<h1>Bienvenido</h1>
-<p>Universidad digital</p>
+<div class="container">
+
+<!-- SIDEBAR ADMIN -->
+<div class="sidebar" id="sidebar">
+<h3>Admin</h3>
+<div onclick="showAdmin('programas')">Programas</div>
+<div onclick="showAdmin('usuarios')">Usuarios</div>
 </div>
 
-<!-- PROGRAMAS -->
-<div id="programas" class="section">
-<h1>Programas</h1>
-<div id="listaProgramas"></div>
+<!-- MAIN -->
+<div class="main">
+
+<!-- HOME -->
+<div id="home">
+<div class="hero">
+<h1>Educación de Calidad</h1>
+<p>Plataforma institucional</p>
+</div>
+
+<div id="programasPublic"></div>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="section">
-<h1>Login / Registro</h1>
+<div id="login" class="hidden">
+<h2>Login / Registro</h2>
 
 <input id="email" placeholder="Email">
 <input id="password" type="password" placeholder="Contraseña">
 
 <button onclick="register()">Registrarse</button>
-<button onclick="login()">Iniciar Sesión</button>
-
-<p id="user"></p>
+<button onclick="login()">Entrar</button>
 </div>
 
 <!-- ADMIN -->
-<div id="admin" class="section">
-<h1>Panel Admin</h1>
+<div id="admin" class="hidden">
 
-<input id="progNombre" placeholder="Nombre programa">
-<button onclick="guardarPrograma()">Guardar</button>
+<div id="adminProgramas">
+<h2>Gestión de Programas</h2>
+<input id="prog" placeholder="Nombre programa">
+<button onclick="addPrograma()">Agregar</button>
+
+<div id="listaAdmin"></div>
+</div>
+
+<div id="adminUsuarios" class="hidden">
+<h2>Usuarios</h2>
+<div id="listaUsers"></div>
+</div>
+
+</div>
+
+</div>
 </div>
 
 <script>
-// 🔥 CONFIG (PON LA TUYA)
+// 🔥 CONFIG
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_DOMINIO",
-  projectId: "TU_ID",
+  apiKey: "AIzaSyBFMzuABuWWLc_4UCYmZNIs0SpqlaLmggc",
+  authDomain: "pagina-web-universitaria.firebaseapp.com",
+  databaseURL: "https://pagina-web-universitaria-default-rtdb.firebaseio.com",
+  projectId: "pagina-web-universitaria",
+  storageBucket: "pagina-web-universitaria.firebasestorage.app",
+  messagingSenderId: "295859033709",
+  appId: "1:295859033709:web:7cdb2f9f2e7e0801e65164",
+  measurementId: "G-T3SL6356LE"
 };
 
-// INIT
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// SPA NAV
-function show(id){
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
+// NAV
+function goHome(){
+hideAll();
+home.classList.remove("hidden");
+}
+
+function goLogin(){
+hideAll();
+login.classList.remove("hidden");
+}
+
+function hideAll(){
+home.classList.add("hidden");
+login.classList.add("hidden");
+admin.classList.add("hidden");
 }
 
 // AUTH
 function register(){
-auth.createUserWithEmailAndPassword(
-email.value,
-password.value
-)
-.then(()=>alert("Registrado"))
-.catch(e=>alert(e.message))
+auth.createUserWithEmailAndPassword(email.value,password.value)
+.then(()=>{
+db.collection("users").add({
+email: email.value,
+role: "estudiante"
+});
+alert("Registrado");
+});
 }
 
 function login(){
-auth.signInWithEmailAndPassword(
-email.value,
-password.value
-)
-.then(()=>alert("Bienvenido"))
-.catch(e=>alert(e.message))
+auth.signInWithEmailAndPassword(email.value,password.value);
 }
 
-// GUARDAR PROGRAMAS
-function guardarPrograma(){
-db.collection("programas").add({
-nombre: progNombre.value
-})
-}
-
-// LISTAR PROGRAMAS
-function cargarProgramas(){
-db.collection("programas").onSnapshot(snapshot=>{
-let html="";
-snapshot.forEach(doc=>{
-html += `<div class="card">${doc.data().nombre}</div>`;
-});
-listaProgramas.innerHTML = html;
-});
-}
-
-cargarProgramas();
-
-// USUARIO ACTIVO
-auth.onAuthStateChanged(user=>{
+// ROLE CONTROL
+auth.onAuthStateChanged(async user=>{
 if(user){
-document.getElementById("user").innerText = "Logueado: " + user.email;
+
+let q = await db.collection("users")
+.where("email","==",user.email).get();
+
+q.forEach(doc=>{
+if(doc.data().role === "admin"){
+sidebar.style.display="block";
+admin.classList.remove("hidden");
+home.classList.add("hidden");
 }
 });
+}
+});
+
+// ADMIN NAV
+function showAdmin(section){
+adminProgramas.classList.add("hidden");
+adminUsuarios.classList.add("hidden");
+
+if(section==="programas") adminProgramas.classList.remove("hidden");
+if(section==="usuarios") adminUsuarios.classList.remove("hidden");
+}
+
+// PROGRAMAS
+function addPrograma(){
+db.collection("programas").add({nombre: prog.value});
+}
+
+function loadProgramas(){
+db.collection("programas").onSnapshot(snap=>{
+let html="";
+snap.forEach(doc=>{
+html += `<div class="card">
+${doc.data().nombre}
+<button onclick="del('${doc.id}')">Eliminar</button>
+</div>`;
+});
+listaAdmin.innerHTML = html;
+programasPublic.innerHTML = html;
+});
+}
+
+function del(id){
+db.collection("programas").doc(id).delete();
+}
+
+// USERS
+function loadUsers(){
+db.collection("users").onSnapshot(snap=>{
+let html="";
+snap.forEach(doc=>{
+html += `<div class="card">${doc.data().email} - ${doc.data().role}</div>`;
+});
+listaUsers.innerHTML = html;
+});
+}
+
+loadProgramas();
+loadUsers();
 </script>
 
 </body>
