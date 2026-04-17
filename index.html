@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UNICIENCIA SYSTEM PRO</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<!-- Firebase v8 (CORRECTO PARA TU CÓDIGO) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <style>
 body{margin:0;font-family:Segoe UI;background:#eef1f5}
 
-/* NAVBAR */
+/* HEADER */
 header{
 background:#002147;
 color:#fff;
@@ -26,15 +27,12 @@ nav a{
 color:white;
 margin:10px;
 cursor:pointer;
-font-weight:500;
 }
 
 /* LAYOUT */
-.container{
-display:flex;
-}
+.container{display:flex}
 
-/* SIDEBAR ADMIN */
+/* SIDEBAR */
 .sidebar{
 width:220px;
 background:#00152e;
@@ -58,13 +56,13 @@ padding:30px;
 /* CARDS */
 .card{
 background:white;
-padding:20px;
+padding:15px;
 margin:10px 0;
 border-radius:10px;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* FORM */
+/* INPUT */
 input{
 padding:10px;
 width:100%;
@@ -89,7 +87,7 @@ padding:100px;
 text-align:center;
 }
 
-/* HIDE */
+/* HIDDEN */
 .hidden{display:none}
 </style>
 </head>
@@ -99,8 +97,8 @@ text-align:center;
 <header>
 <h2>UNICIENCIA</h2>
 <nav>
-<a onclick="goHome()">Inicio</a>
-<a onclick="goLogin()">Login</a>
+<a onclick="showHome()">Inicio</a>
+<a onclick="showLogin()">Login</a>
 </nav>
 </header>
 
@@ -108,7 +106,7 @@ text-align:center;
 
 <!-- SIDEBAR ADMIN -->
 <div class="sidebar" id="sidebar">
-<h3>Admin</h3>
+<h3>Panel Admin</h3>
 <div onclick="showAdmin('programas')">Programas</div>
 <div onclick="showAdmin('usuarios')">Usuarios</div>
 </div>
@@ -119,10 +117,11 @@ text-align:center;
 <!-- HOME -->
 <div id="home">
 <div class="hero">
-<h1>Educación de Calidad</h1>
-<p>Plataforma institucional</p>
+<h1>Plataforma Educativa</h1>
+<p>Sistema universitario digital</p>
 </div>
 
+<h3>Programas</h3>
 <div id="programasPublic"></div>
 </div>
 
@@ -135,11 +134,14 @@ text-align:center;
 
 <button onclick="register()">Registrarse</button>
 <button onclick="login()">Entrar</button>
+
+<p id="msg"></p>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="hidden">
 
+<!-- PROGRAMAS -->
 <div id="adminProgramas">
 <h2>Gestión de Programas</h2>
 <input id="prog" placeholder="Nombre programa">
@@ -148,6 +150,7 @@ text-align:center;
 <div id="listaAdmin"></div>
 </div>
 
+<!-- USUARIOS -->
 <div id="adminUsuarios" class="hidden">
 <h2>Usuarios</h2>
 <div id="listaUsers"></div>
@@ -159,7 +162,10 @@ text-align:center;
 </div>
 
 <script>
-// 🔥 CONFIG
+
+/* =========================
+   FIREBASE CONFIG (TU CONFIG)
+========================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBFMzuABuWWLc_4UCYmZNIs0SpqlaLmggc",
   authDomain: "pagina-web-universitaria.firebaseapp.com",
@@ -175,24 +181,40 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// NAV
-function goHome(){
+/* =========================
+   ELEMENTOS DOM
+========================= */
+const home = document.getElementById("home");
+const loginDiv = document.getElementById("login");
+const admin = document.getElementById("admin");
+const sidebar = document.getElementById("sidebar");
+
+const listaAdmin = document.getElementById("listaAdmin");
+const listaUsers = document.getElementById("listaUsers");
+const programasPublic = document.getElementById("programasPublic");
+
+/* =========================
+   NAV
+========================= */
+function showHome(){
 hideAll();
 home.classList.remove("hidden");
 }
 
-function goLogin(){
+function showLogin(){
 hideAll();
-login.classList.remove("hidden");
+loginDiv.classList.remove("hidden");
 }
 
 function hideAll(){
 home.classList.add("hidden");
-login.classList.add("hidden");
+loginDiv.classList.add("hidden");
 admin.classList.add("hidden");
 }
 
-// AUTH
+/* =========================
+   AUTH
+========================= */
 function register(){
 auth.createUserWithEmailAndPassword(email.value,password.value)
 .then(()=>{
@@ -200,54 +222,83 @@ db.collection("users").add({
 email: email.value,
 role: "estudiante"
 });
-alert("Registrado");
-});
+alert("Usuario creado");
+})
+.catch(e=>alert(e.message));
 }
 
 function login(){
-auth.signInWithEmailAndPassword(email.value,password.value);
+auth.signInWithEmailAndPassword(email.value,password.value)
+.then(user=>{
+checkRole(user.user.email);
+})
+.catch(e=>alert(e.message));
 }
 
-// ROLE CONTROL
-auth.onAuthStateChanged(async user=>{
-if(user){
+/* =========================
+   ROLE SYSTEM
+========================= */
+async function checkRole(emailUser){
 
 let q = await db.collection("users")
-.where("email","==",user.email).get();
+.where("email","==",emailUser)
+.get();
+
+let isAdmin = false;
 
 q.forEach(doc=>{
 if(doc.data().role === "admin"){
+isAdmin = true;
+}
+});
+
+if(isAdmin){
 sidebar.style.display="block";
 admin.classList.remove("hidden");
 home.classList.add("hidden");
+} else {
+alert("Login exitoso como estudiante");
+showHome();
 }
-});
-}
-});
 
-// ADMIN NAV
+}
+
+/* =========================
+   ADMIN NAV
+========================= */
 function showAdmin(section){
-adminProgramas.classList.add("hidden");
-adminUsuarios.classList.add("hidden");
+document.getElementById("adminProgramas").style.display="none";
+document.getElementById("adminUsuarios").style.display="none";
 
-if(section==="programas") adminProgramas.classList.remove("hidden");
-if(section==="usuarios") adminUsuarios.classList.remove("hidden");
+if(section==="programas"){
+document.getElementById("adminProgramas").style.display="block";
+}
+if(section==="usuarios"){
+document.getElementById("adminUsuarios").style.display="block";
+}
 }
 
-// PROGRAMAS
+/* =========================
+   PROGRAMAS CRUD
+========================= */
 function addPrograma(){
-db.collection("programas").add({nombre: prog.value});
+db.collection("programas").add({
+nombre: prog.value
+});
+prog.value="";
 }
 
 function loadProgramas(){
 db.collection("programas").onSnapshot(snap=>{
 let html="";
 snap.forEach(doc=>{
-html += `<div class="card">
+html += `
+<div class="card">
 ${doc.data().nombre}
 <button onclick="del('${doc.id}')">Eliminar</button>
 </div>`;
 });
+
 listaAdmin.innerHTML = html;
 programasPublic.innerHTML = html;
 });
@@ -257,7 +308,9 @@ function del(id){
 db.collection("programas").doc(id).delete();
 }
 
-// USERS
+/* =========================
+   USUARIOS
+========================= */
 function loadUsers(){
 db.collection("users").onSnapshot(snap=>{
 let html="";
@@ -268,8 +321,10 @@ listaUsers.innerHTML = html;
 });
 }
 
+/* INIT */
 loadProgramas();
 loadUsers();
+
 </script>
 
 </body>
