@@ -1,268 +1,224 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uniciencia | Corporación Universitaria de Ciencia y Desarrollo</title>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNICIENCIA PRO</title>
 
-    <style>
-        :root {
-            --azul-uniciencia: #003366;
-            --rojo-uniciencia: #e30613;
-            --gris-claro: #f8f9fa;
-        }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; color: #333; line-height: 1.5; }
+body {
+  background: #f4f6f9;
+}
 
-        /* BARRA SUPERIOR */
-        .top-bar { background: var(--azul-uniciencia); color: white; padding: 8px 10%; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; }
-        .btn-sede { background: var(--rojo-uniciencia); color: white; border: none; padding: 5px 12px; cursor: pointer; text-transform: uppercase; border-radius: 2px; }
+/* NAV */
+header {
+  background: #002147;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-        /* NAVBAR PRINCIPAL */
-        .navbar { background: white; padding: 10px 10%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .logo h1 { color: var(--azul-uniciencia); font-weight: 800; font-size: 26px; cursor: pointer; }
-        .logo span { color: var(--rojo-uniciencia); }
+nav a {
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
 
-        .nav-list { display: flex; list-style: none; }
-        .nav-item { position: relative; }
-        .nav-link { text-decoration: none; color: var(--azul-uniciencia); font-weight: 700; font-size: 13px; padding: 20px 12px; text-transform: uppercase; display: block; border-bottom: 3px solid transparent; }
-        .nav-link:hover, .active-link { color: var(--rojo-uniciencia); border-bottom: 3px solid var(--azul-uniciencia); }
+nav a:hover {
+  color: #00c3ff;
+}
 
-        /* MENÚS DESPLEGABLES (DROPDOWNS) */
-        .dropdown { position: absolute; top: 100%; left: 0; background: white; min-width: 250px; display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-top: 4px solid var(--rojo-uniciencia); }
-        .dropdown a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 13px; font-weight: 500; border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
-        .dropdown a:hover { background: var(--gris-claro); color: var(--rojo-uniciencia); padding-left: 25px; }
-        .nav-item:hover .dropdown { display: block; }
+/* SECCIONES */
+.section {
+  display: none;
+  padding: 60px 30px;
+  animation: fade 0.4s ease;
+}
 
-        /* CONTENEDOR DE PÁGINAS (SPA) */
-        .page-content { display: none; animation: fadeIn 0.4s ease-in; min-height: 70vh; }
-        .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.active {
+  display: block;
+}
 
-        /* BANNER DINÁMICO */
-        .swiper { width: 100%; height: 500px; }
-        .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: center; color: white; padding-left: 10%; position: relative; }
-        .swiper-slide::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
-        .slide-info { position: relative; z-index: 10; max-width: 650px; }
-        .slide-info h2 { font-size: 45px; font-weight: 800; line-height: 1.1; margin-bottom: 15px; }
-        .swiper-button-next, .swiper-button-prev { color: white !important; }
+@keyframes fade {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
 
-        /* SECCIONES INICIO: TARJETAS Y NOTICIAS */
-        .container { padding: 60px 10%; }
-        .section-header { border-left: 6px solid var(--rojo-uniciencia); padding-left: 20px; margin-bottom: 40px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        
-        /* CARTAS DIRECTORIO (Diseño Circular como Captura) */
-        .staff-card { background: white; border: 1px solid #eee; border-radius: 10px; padding: 30px; text-align: left; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
-        .staff-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .staff-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #00a0df; flex-shrink: 0; }
-        .staff-text h4 { color: #00a0df; text-transform: uppercase; font-size: 16px; margin-bottom: 5px; }
-        .staff-text p { font-size: 13px; color: #666; font-weight: 600; }
-        .staff-text span { font-size: 12px; color: #00a0df; word-break: break-all; }
+/* HERO */
+.hero {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+  url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1');
+  background-size: cover;
+  color: white;
+  text-align: center;
+  padding: 120px 20px;
+}
 
-        /* FOOTER OSCURO */
-        footer { background: #1a1d23; color: #999; padding: 60px 10% 20px; font-size: 13px; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
-        .footer-col h4 { color: white; margin-bottom: 25px; text-transform: uppercase; border-bottom: 2px solid var(--rojo-uniciencia); display: inline-block; padding-bottom: 5px; }
-        .footer-bottom { border-top: 1px solid #333; margin-top: 40px; padding-top: 25px; text-align: center; }
+.cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
 
-    </style>
+.card {
+  background: white;
+  flex: 1;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* GRID PROGRAMAS */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+}
+
+/* FOOTER */
+footer {
+  background: #002147;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+/* BOTON */
+.btn {
+  background: #002147;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="top-bar">
-        <button class="btn-sede">ESCOGE TU SEDE <i class="fas fa-caret-down"></i></button>
-        <div>U-VIRTUAL | SIGA | PQRSD | CORREO INSTITUCIONAL | PSE</div>
+<header>
+  <h2>UNICIENCIA</h2>
+  <nav>
+    <a onclick="show('inicio')">Inicio</a>
+    <a onclick="show('nosotros')">Nosotros</a>
+    <a onclick="show('programas')">Programas</a>
+    <a onclick="show('investigacion')">Investigación</a>
+    <a onclick="show('siac')">SIAC</a>
+    <a onclick="show('estudiante')">Estudiante</a>
+    <a onclick="show('convocatorias')">Convocatorias</a>
+  </nav>
+</header>
+
+<!-- INICIO -->
+<section id="inicio" class="section active">
+  <div class="hero">
+    <h1>Bienvenido a UNICIENCIA</h1>
+    <p>Educación de calidad para el futuro</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Inscripciones</h3>
+      <p>Inicia tu proceso académico</p>
     </div>
+    <div class="card">
+      <h3>Estudiantes</h3>
+      <p>Servicios académicos</p>
+    </div>
+    <div class="card">
+      <h3>Convocatorias</h3>
+      <p>Únete a nuestro equipo</p>
+    </div>
+  </div>
+</section>
 
-    <header class="navbar">
-        <div class="logo" onclick="navigateTo('inicio')"><h1>UNI<span>CIENCIA</span></h1></div>
-        <nav>
-            <ul class="nav-list">
-                <li class="nav-item"><a href="#" class="nav-link active-link" onclick="navigateTo('inicio')">Inicio</a></li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Nosotros <i class="fas fa-chevron-down" style="font-size: 10px;"></i></a>
-                    <div class="dropdown">
-                        <a href="#" onclick="navigateTo('directorio')">Directorio Administrativo</a>
-                        <a href="#" onclick="navigateTo('mision')">Misión y Visión</a>
-                        <a href="#">Reseña Histórica</a>
-                        <a href="#">Estructura Organizacional</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Programas <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown">
-                        <a href="#" onclick="navigateTo('programas')">Pregrado</a>
-                        <a href="#">Especializaciones</a>
-                        <a href="#">Educación Continuada</a>
-                    </div>
-                </li>
-                <li class="nav-item"><a href="#" class="nav-link">Investigación</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Normatividad</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Vive la U</a></li>
-            </ul>
-        </nav>
-    </header>
+<!-- NOSOTROS -->
+<section id="nosotros" class="section">
+  <h1>Nosotros</h1>
+  <p>Institución comprometida con la excelencia académica, investigación y proyección social.</p>
+</section>
 
-    <main id="inicio" class="page-content active-page">
-        <div class="swiper">
-            <div class="swiper-wrapper" id="banner-slides">
-                </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
-        </div>
+<!-- PROGRAMAS -->
+<section id="programas" class="section">
+  <h1>Programas Académicos</h1>
+  <div class="grid">
+    <div class="card">Ingeniería de Sistemas</div>
+    <div class="card">Administración</div>
+    <div class="card">Contaduría</div>
+    <div class="card">Derecho</div>
+  </div>
+</section>
 
-        <div class="container" style="text-align: center;">
-            <h2 style="font-size: 32px; color: var(--azul-uniciencia);">BIENVENIDO A UNICIENCIA</h2>
-            <p style="max-width: 800px; margin: 20px auto; color: #666;">Formamos profesionales integrales con sentido ético y responsabilidad social.</p>
-        </div>
+<!-- INVESTIGACION -->
+<section id="investigacion" class="section">
+  <h1>Investigación</h1>
+  <p>Proyectos, semilleros y producción científica.</p>
+</section>
 
-        <div class="container grid">
-            <div style="background: var(--rojo-uniciencia); color:white; padding: 40px; text-align: center; border-radius: 8px;">
-                <i class="fas fa-edit fa-3x"></i>
-                <h3 style="margin: 15px 0;">INSCRIPCIÓN</h3>
-                <p>Sé parte de nuestra comunidad. Uniciencia te acerca a tus metas.</p>
-                <a href="#" style="color:white; font-weight: 700; text-decoration:none; display:block; margin-top:20px;">FORMULARIO DE INSCRIPCIÓN ></a>
-            </div>
-            <div style="background: var(--azul-uniciencia); color:white; padding: 40px; text-align: center; border-radius: 8px;">
-                <i class="fas fa-user-graduate fa-3x"></i>
-                <h3 style="margin: 15px 0;">ESTUDIANTE</h3>
-                <p>Tutoriales, procesos de reintegro, grado y entidades financieras.</p>
-                <a href="#" style="color:white; font-weight: 700; text-decoration:none; display:block; margin-top:20px;">IR A LA SECCIÓN ></a>
-            </div>
-            <div style="background: var(--rojo-uniciencia); color:white; padding: 40px; text-align: center; border-radius: 8px;">
-                <i class="fas fa-search fa-3x"></i>
-                <h3 style="margin: 15px 0;">CONVOCATORIAS</h3>
-                <p>¿Quieres hacer parte de nuestro equipo? Mira nuestras ofertas.</p>
-                <a href="#" style="color:white; font-weight: 700; text-decoration:none; display:block; margin-top:20px;">VER OFERTAS ></a>
-            </div>
-        </div>
-    </main>
+<!-- SIAC -->
+<section id="siac" class="section">
+  <h1>SIAC</h1>
+  <p>Sistema Interno de Aseguramiento de la Calidad.</p>
 
-    <section id="directorio" class="page-content container">
-        <div class="section-header">
-            <h2 style="color: var(--azul-uniciencia); font-size: 30px;">DIRECTORIO ADMINISTRATIVO</h2>
-            <p>Conoce nuestro equipo directivo e institucional.</p>
-        </div>
-        
-        <h3 style="margin: 40px 0 20px; color: #666; border-bottom: 1px solid #ddd; padding-bottom: 10px;">DIRECCIÓN INSTITUCIONAL</h3>
-        <div class="grid" id="staff-institutional">
-            </div>
+  <div class="cards">
+    <div class="card">Gestión Académica</div>
+    <div class="card">Gestión Administrativa</div>
+    <div class="card">Mejora Continua</div>
+  </div>
+</section>
 
-        <h3 style="margin: 60px 0 20px; color: #666; border-bottom: 1px solid #ddd; padding-bottom: 10px;">PLANEACIÓN INSTITUCIONAL</h3>
-        <div class="grid" id="staff-planning">
-            </div>
-    </section>
+<!-- ESTUDIANTE -->
+<section id="estudiante" class="section">
+  <h1>Zona Estudiante</h1>
+  <p>Acceso a plataformas y servicios.</p>
 
-    <section id="programas" class="page-content container">
-        <div class="section-header"><h2>Nuestros Programas de Pregrado</h2></div>
-        <div class="grid">
-            <div class="staff-card"><div class="staff-text"><h4>Derecho</h4><p>Modalidad: Presencial</p><span>Bucaramanga - Bogotá - Tunja</span></div></div>
-            <div class="staff-card"><div class="staff-text"><h4>Psicología</h4><p>Modalidad: Presencial</p><span>Bucaramanga</span></div></div>
-            <div class="staff-card"><div class="staff-text"><h4>Contaduría Pública</h4><p>Modalidad: Presencial</p><span>Nacional</span></div></div>
-        </div>
-    </section>
+  <button class="btn" onclick="alert('Aquí conectas Firebase luego')">
+    Iniciar Sesión
+  </button>
+</section>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>Sede Bucaramanga</h4>
-                <p><i class="fas fa-map-marker-alt"></i> Carrera 12 # 37-14</p>
-                <p><i class="fas fa-phone"></i> (607) 6306060</p>
-            </div>
-            <div class="footer-col">
-                <h4>Sede Bogotá</h4>
-                <p><i class="fas fa-map-marker-alt"></i> Carrera 13 # 75-74</p>
-                <p><i class="fas fa-phone"></i> (601) 3930444</p>
-            </div>
-            <div class="footer-col">
-                <h4>Navega</h4>
-                <p>Transparencia</p>
-                <p>Saber Pro</p>
-                <p>Tratamiento de Datos</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 Corporación Universitaria de Ciencia y Desarrollo - UNICIENCIA. Institución de Educación Superior sujeta a inspección y vigilancia por el Ministerio de Educación Nacional.
-        </div>
-    </footer>
+<!-- CONVOCATORIAS -->
+<section id="convocatorias" class="section">
+  <h1>Convocatorias</h1>
+  <p>Ofertas laborales y académicas disponibles.</p>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        // 1. Datos del Banner
-        const slides = [
-            { img: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd', h: 'Foro Académico: Gerencia Estratégica', p: '18 de abril - 2026 | Modalidad Sincrónica' },
-            { img: 'https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98', h: 'Admisiones Abiertas 2026', p: 'Inicia tu futuro profesional con nosotros.' }
-        ];
+<footer>
+  <p>© 2026 UNICIENCIA PRO</p>
+</footer>
 
-        // 2. Datos del Directorio (Según tus capturas)
-        const institutionalStaff = [
-            { n: 'Lilian Johanna Fernandez', c: 'Representante Legal Conjunta', e: 'representacionlegalconjunta@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=32' },
-            { n: 'Gonzalo Hernando Téllez', c: 'Representante Legal Conjunta', e: 'representacionlegalconjunta@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=12' },
-            { n: 'María Alejandra Rodríguez', c: 'Rectora', e: 'rectoria@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=44' }
-        ];
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
 
-        const planningStaff = [
-            { n: 'Jairo Humberto Lara Zárate', c: 'Coordinador Planeación Nacional', e: 'dir.planeacion@uniciencia.edu.co', f: 'https://i.pravatar.cc/150?img=53' }
-        ];
-
-        // 3. Función para Navegar (Sin recargar la página)
-        function navigateTo(pageId) {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
-            
-            document.getElementById(pageId).classList.add('active-page');
-            event.currentTarget.classList?.add('active-link');
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            if(pageId === 'inicio') setTimeout(() => window.swiper.update(), 200);
-        }
-
-        // 4. Inicialización
-        function init() {
-            // Render Banner
-            const slider = document.getElementById('banner-slides');
-            slides.forEach(s => slider.innerHTML += `<div class="swiper-slide" style="background-image:url('${s.img}')"><div class="slide-info"><h2>${s.h}</h2><p>${s.p}</p></div></div>`);
-
-            // Render Directorio
-            const instGrid = document.getElementById('staff-institutional');
-            institutionalStaff.forEach(p => instGrid.innerHTML += `
-                <div class="staff-card">
-                    <img src="${p.f}" class="staff-img">
-                    <div class="staff-text">
-                        <h4>${p.n}</h4>
-                        <p>${p.c}</p>
-                        <span>${p.e}</span>
-                    </div>
-                </div>`);
-
-            const planGrid = document.getElementById('staff-planning');
-            planningStaff.forEach(p => planGrid.innerHTML += `
-                <div class="staff-card">
-                    <img src="${p.f}" class="staff-img">
-                    <div class="staff-text">
-                        <h4>${p.n}</h4>
-                        <p>${p.c}</p>
-                        <span>${p.e}</span>
-                    </div>
-                </div>`);
-
-            // Activar Swiper
-            window.swiper = new Swiper('.swiper', {
-                loop: true,
-                autoplay: { delay: 4000 },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                pagination: { el: '.swiper-pagination', clickable: true },
-            });
-        }
-
-        window.onload = init;
-    </script>
 </body>
 </html>
