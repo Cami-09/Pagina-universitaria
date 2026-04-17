@@ -13,50 +13,45 @@
         :root { --azul: #002d55; --rojo: #e30613; --gris: #f4f4f4; --dark: #1a1d23; }
         body { margin: 0; font-family: 'Montserrat', sans-serif; background: white; color: #333; }
         
-        /* HEADER & NAV */
+        /* HEADER & NAVBAR DESPLEGABLE */
         .top-bar { background: var(--azul); color: white; padding: 10px 10%; display: flex; justify-content: space-between; font-size: 11px; }
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 10%; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .nav-links a { text-decoration: none; color: var(--azul); font-weight: bold; margin-left: 15px; font-size: 12px; }
+        
+        .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
+        .nav-item { position: relative; margin-left: 15px; }
+        .nav-item a { text-decoration: none; color: var(--azul); font-weight: bold; font-size: 12px; padding: 10px 0; display: block; }
 
-        /* BANNER */
-        .swiper { width: 100%; height: 450px; }
+        /* Submenú Desplegable */
+        .dropdown {
+            position: absolute; top: 100%; left: 0; background: white;
+            min-width: 220px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none; border-top: 3px solid var(--azul);
+        }
+        .dropdown a { color: #555 !important; padding: 12px 20px; border-bottom: 1px solid #eee; }
+        .dropdown a:hover { background: var(--gris); color: var(--rojo) !important; }
+        .nav-item:hover .dropdown { display: block; }
+
+        /* BANNER DINÁMICO */
+        .swiper { width: 100%; height: 500px; }
         .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: center; padding-left: 10%; color: white; position: relative; }
         .swiper-slide::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
         .slide-content { position: relative; z-index: 2; }
 
-        /* SECCIONES TITULOS */
-        .section-title { text-align: center; padding: 50px 0 20px; text-transform: uppercase; color: #333; letter-spacing: 2px; }
+        /* BOTONES DEL BANNER (Flechas) */
+        .swiper-button-next, .swiper-button-prev { color: white !important; background: rgba(0,0,0,0.3); width: 50px; height: 50px; border-radius: 50%; }
 
-        /* NOTICIAS & CONVOCATORIAS GRID */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 0 10% 50px; }
-        
-        .card { background: white; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
-        .card-body { padding: 20px; flex-grow: 1; }
-        .card-date { font-size: 11px; color: #888; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .btn-read { background: var(--azul); color: white; padding: 10px 20px; text-decoration: none; display: inline-block; font-size: 12px; border-radius: 3px; margin-top: 15px; }
-
-        /* SELLO CONVOCATORIA CERRADA */
-        .badge-cerrada {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
-            background: rgba(227, 6, 19, 0.9); color: white; padding: 10px 30px;
-            font-weight: bold; font-size: 24px; border: 4px solid white; z-index: 5;
-            pointer-events: none; text-transform: uppercase;
-        }
-        .cerrada { filter: grayscale(1) opacity(0.7); }
-
-        /* PROXIMOS EVENTOS */
-        .event-bar { background: #f9f9f9; margin: 20px 10%; display: flex; align-items: center; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; }
-        .event-date-box { background: var(--azul); color: white; padding: 20px; text-align: center; min-width: 100px; }
-        .event-info { padding: 20px; }
+        /* DIRECTORIO ADMINISTRATIVO (Sección Oculta inicialmente) */
+        #directorio { padding: 60px 10%; display: none; }
+        .directorio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .staff-card { border: 1px solid #eee; padding: 20px; text-align: center; border-radius: 8px; }
+        .staff-card img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--azul); }
+        .staff-card h4 { color: var(--azul); margin: 10px 0 5px; }
+        .staff-card p { font-size: 13px; color: #777; margin: 0; }
 
         /* FOOTER */
         footer { background: var(--dark); color: #bbb; padding: 60px 10% 20px; font-size: 13px; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-col h4 { color: white; text-transform: uppercase; margin-bottom: 20px; font-size: 14px; }
-        .footer-col p { margin: 8px 0; line-height: 1.5; }
-        .footer-bottom { border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 11px; }
-
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .footer-bottom { border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 11px; margin-top: 30px;}
     </style>
 </head>
 <body>
@@ -68,110 +63,105 @@
 
     <header class="navbar">
         <div class="logo"><h2>UNI<span style="color:var(--rojo)">CIENCIA</span></h2></div>
-        <nav class="nav-links">
-            <a href="#">INICIO</a><a href="#">NOSOTROS</a><a href="#">PROGRAMAS</a><a href="#">VIVE LA U</a>
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="#" onclick="showSection('inicio')">INICIO</a></li>
+                <li class="nav-item">
+                    <a href="#">NOSOTROS <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown">
+                        <a href="#" onclick="showSection('directorio')">Directorio administrativo</a>
+                        <a href="#">Estructura Organizacional</a>
+                        <a href="#">Misión y Visión</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="#">PROGRAMAS</a></li>
+                <li class="nav-item"><a href="#">VIVE LA U</a></li>
+            </ul>
         </nav>
     </header>
 
-    <div class="swiper"><div class="swiper-wrapper" id="banner-list"></div></div>
-
-    <h2 class="section-title">Uninoticias</h2>
-    <div class="grid-container" id="news-container"></div>
-
-    <h2 class="section-title">Próximos Eventos</h2>
-    <div class="event-bar">
-        <div class="event-date-box"><strong>10/24</strong><br>ABRIL</div>
-        <div class="event-info">
-            <strong>Ceremonia pública de grados</strong><br>
-            <small><i class="fas fa-clock"></i> Bogotá: 17/04 | Tunja: 10/04 | Bucaramanga: 24/04</small>
+    <div id="inicio">
+        <div class="swiper">
+            <div class="swiper-wrapper" id="banner-list"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
         </div>
+        
+        <h2 style="text-align:center; margin-top:40px;">BIENVENIDO A UNICIENCIA</h2>
     </div>
 
-    <h2 class="section-title">Últimas Convocatorias</h2>
-    <div class="grid-container" id="convocatorias-container"></div>
+    <section id="directorio">
+        <h2 style="color:var(--azul); border-bottom: 2px solid var(--rojo); padding-bottom: 10px;">Directorio Administrativo</h2>
+        <div class="directorio-grid">
+            <div class="staff-card">
+                <img src="https://via.placeholder.com/150" alt="Rector">
+                <h4>Nombre del Rector</h4>
+                <p>Rectoría</p>
+                <small>rectoria@uniciencia.edu.co</small>
+            </div>
+            <div class="staff-card">
+                <img src="https://via.placeholder.com/150" alt="Secretaría">
+                <h4>Nombre del Secretario</h4>
+                <p>Secretaría General</p>
+                <small>secretaria@uniciencia.edu.co</small>
+            </div>
+            </div>
+    </section>
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col">
-                <h4>Bucaramanga</h4>
-                <p>Sede A: Carrera 12 # 37-14</p>
-                <p><i class="fas fa-phone"></i> (607) 6306060</p>
-            </div>
-            <div class="footer-col">
-                <h4>Bogotá</h4>
-                <p>Sede A: Carrera 13 # 75-74</p>
-                <p><i class="fas fa-phone"></i> (601) 3930444</p>
-            </div>
-            <div class="footer-col">
-                <h4>Tunja</h4>
-                <p>Carrera 9 # 20-17</p>
-                <p><i class="fas fa-envelope"></i> coordinacion.tunja@uniciencia.edu.co</p>
-            </div>
-            <div class="footer-col">
-                <h4>Navega</h4>
-                <p>Transparencia</p><p>Saber Pro</p><p>Revista Visión</p>
-            </div>
+            <div class="footer-col"><h4>Sede Bucaramanga</h4><p>Carrera 12 # 37-14</p></div>
+            <div class="footer-col"><h4>Navega</h4><p>Transparencia</p><p>Saber Pro</p></div>
         </div>
-        <div class="footer-bottom">
-            &copy; 2026 Corporación Universitaria de Ciencia y Desarrollo - UNICIENCIA. Todos los derechos reservados.
-        </div>
+        <div class="footer-bottom">&copy; 2026 UNICIENCIA.</div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // CONFIGURACIÓN DE BANNER
+        // CONFIGURACIÓN DE BANNER (AHORA CON AUTOPLAY Y BOTONES)
         const slides = [
-            { url: 'https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98', titulo: 'Foro Académico', texto: 'Gerencia Estratégica y Liderazgo' }
-        ];
-        
-        // DATOS DE NOTICIAS
-        const noticias = [
-            { fecha: 'Feb 19, 2025', titulo: 'UNICIENCIA te invita a TEDx', img: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=500' },
-            { fecha: 'Feb 15, 2025', titulo: 'Visita Vicepresidenta Ecuador', img: 'https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?w=500' }
+            { url: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd', titulo: 'Gerencia Estratégica', texto: 'Inscríbete ahora' },
+            { url: 'https://images.unsplash.com/photo-1523240715181-2f0f9f20dd98', titulo: 'Admisiones 2026', texto: 'Calendario abierto' }
         ];
 
-        // DATOS DE CONVOCATORIAS (Aquí puedes abrir/cerrar)
-        const convocatorias = [
-            { id: 1, titulo: 'Docente Asesor Área Penal', estado: 'abierta', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=500' },
-            { id: 2, titulo: 'Coordinador Infraestructura', estado: 'cerrada', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500' }
-        ];
-
-        // RENDERIZAR BANNER
         const bannerList = document.getElementById('banner-list');
         slides.forEach(s => {
-            bannerList.innerHTML += `<div class="swiper-slide" style="background-image:url('${s.url}')"><div class="slide-content"><h1>${s.titulo}</h1><p>${s.texto}</p></div></div>`;
-        });
-
-        // RENDERIZAR NOTICIAS
-        const newsCont = document.getElementById('news-container');
-        noticias.forEach(n => {
-            newsCont.innerHTML += `
-                <div class="card">
-                    <img src="${n.img}" class="card-img">
-                    <div class="card-body">
-                        <div class="card-date"><i class="far fa-calendar"></i> ${n.fecha}</div>
-                        <h4>${n.titulo}</h4>
-                        <a href="#" class="btn-read">Leer más...</a>
-                    </div>
+            bannerList.innerHTML += `
+                <div class="swiper-slide" style="background-image:url('${s.url}')">
+                    <div class="slide-content"><h1>${s.titulo}</h1><p>${s.texto}</p></div>
                 </div>`;
         });
 
-        // RENDERIZAR CONVOCATORIAS
-        const convCont = document.getElementById('convocatorias-container');
-        convocatorias.forEach(c => {
-            const esCerrada = c.estado === 'cerrada';
-            convCont.innerHTML += `
-                <div class="card ${esCerrada ? 'cerrada' : ''}">
-                    ${esCerrada ? '<div class="badge-cerrada">Cerrada</div>' : ''}
-                    <img src="${c.img}" class="card-img">
-                    <div class="card-body">
-                        <h4>${c.titulo}</h4>
-                        <a href="#" class="btn-read" style="background:${esCerrada ? '#666' : ''}">Ver detalles</a>
-                    </div>
-                </div>`;
+        // Inicializar Swiper con todas las funciones
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+                delay: 3000, // Cambia cada 3 segundos automáticamente
+                disableOnInteraction: false, // No se detiene si el usuario hace click
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
         });
 
-        new Swiper('.swiper', { loop: true, autoplay: { delay: 5000 } });
+        // FUNCIÓN PARA CAMBIAR ENTRE INICIO Y DIRECTORIO
+        function showSection(sectionId) {
+            document.getElementById('inicio').style.display = 'none';
+            document.getElementById('directorio').style.display = 'none';
+            
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Si volvemos a inicio, reiniciamos el swiper para que no falle
+            if(sectionId === 'inicio') {
+                swiper.update();
+            }
+        }
     </script>
 </body>
 </html>
